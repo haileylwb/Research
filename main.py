@@ -6,22 +6,21 @@ import matplotlib.pyplot as plot
 # s = number of sequences created
 def createSequences(n, p, s):
   sequences = []
-
+  
   for i in range(s):
     sequence = []
-
+    
     # first node
     x = random.randint(0,1)
     sequence.append(x)
-
+    
     # remaining nodes
     for j in range(1, n):
       if random.random() < p:
         x = 1 - x
       sequence.append(x)
-
+      
     sequences.append(sequence)
-    
   return sequences
 
 
@@ -44,6 +43,13 @@ def sortSequences(sequences):
   return typeA, typeB
 
 
+def calculatePr(sequence):
+  # how many sequences where x1 = x0 , divided by number of sequences
+
+def plotPr():
+  # calculatePr but for values n from 2 to k
+
+  
 def main():
   n = 3
   p = .5
