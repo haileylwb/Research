@@ -45,6 +45,14 @@ def sortSequences(sequences):
 
 def calculatePr(sequence):
   # how many sequences where x1 = x0 , divided by number of sequences
+  count = 0
+  len = 0
+  for sequence in sequences:
+    len++
+    if sequence[0] == sequence[1]:
+      count++
+  return round(count/len)
+
 
 def plotPr():
   # calculatePr but for values n from 2 to k
