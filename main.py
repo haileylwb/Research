@@ -46,27 +46,36 @@ def sortSequences(sequences):
 def calculatePr(sequence):
   # how many sequences where x1 = x0 , divided by number of sequences
   count = 0
-  len = 0
   for sequence in sequences:
-    len++
     if sequence[0] == sequence[1]:
       count++
-  return round(count/len)
+  return round(count/len(sequences))
 
 
-def plotPr():
-  # calculatePr but for values n from 2 to k
+def plotPr(node_counts, probabilities):
+    plt.plot(node_counts, probabilities, marker='o')
+    plt.xticks(node_counts)
+    plt.xlabel('Number of Nodes')
+    plt.ylabel('Probability that x1 = x0')
+    plt.title('Probability of x1 = x0 vs Number of Nodes')
+    plt.ylim(0, 1) 
+    plt.grid()
+    plt.show()
 
   
 def main():
-  n = 3
-  p = .5
-  s = 3
-  
-  sequences = createSequences(n, p, s)
-  typeA, typeB = sortSequences(sequences)
-  printSequence(typeA)
-  printSequence(typeB)
+  p = 0.5  
+  s = 100
+  node_counts = range(2, 11)  # Node from 2 to 10
+  probabilities = []
+
+  for n in node_counts:
+    sequences = createSequences(n, p, s)
+    probability = calculatePr(sequences)
+    probabilities.append(probability)
+
+  plotPr(node_counts, probabilities)
+
 
 if __name__ == "__main__":
     main()
