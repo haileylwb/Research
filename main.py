@@ -48,7 +48,7 @@ def calculatePr(sequence):
   count = 0
   for sequence in sequences:
     if sequence[0] == sequence[1]:
-      count++
+      count+=1
   return round(count/len(sequences))
 
 
