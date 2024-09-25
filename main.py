@@ -15,7 +15,7 @@ def createSequences(n, p, s):
     sequence.append(x)
     
     # remaining nodes
-    for j in range(1, n):
+    for j in range(1, n+1):
       if random.random() < p:
         x = 1 - x
       sequence.append(x)
@@ -49,7 +49,7 @@ def calculatePr(sequence):
   for seq in sequence:
     if seq[0] == seq[1]:
       count+=1
-  return round(count/len(sequence))
+  return round((count/len(sequence)), 2)
 
 
 def plotPr(node_counts, probabilities):
@@ -58,15 +58,15 @@ def plotPr(node_counts, probabilities):
   plt.xlabel('Number of Nodes')
   plt.ylabel('Probability that x1 = x0')
   plt.title('Probability of x1 = x0 vs Number of Nodes')
-  plt.ylim(0, 1) 
+  plt.ylim(0, 1)
   plt.grid()
   plt.show()
 
   
 def main():
-  p = 0.5  
-  s = 100
-  nodes = range(2, 11)  # Node from 2 to 10
+  p = 0.25
+  s = 500
+  nodes = range(2, 1000)  # Node from 2 to 10
   probabilitiesA = []
   probabilitiesB = []
 
@@ -76,11 +76,12 @@ def main():
     probabilityA = calculatePr(typeA)
     probabilitiesA.append(probabilityA)
     probabilityB = calculatePr(typeB)
-    probabilitiesA.append(probabilityB)
+    probabilitiesB.append(probabilityB)
+    #printSequence(typeA)
+    #printSequence(probabilitiesA)
 
-  plotPr(node_counts, probabilitiesA)
+  plotPr(nodes, probabilitiesA)
 
 
 if __name__ == "__main__":
     main()
-  
