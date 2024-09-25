@@ -23,7 +23,10 @@ def createSequences(n, p, s):
     
   return sequences
 
+
 def printSequence(n, p, s):
   sequences = createSequences(n, p, s)
   for sequence in sequences:
     print(sequence)
+    
+  return
