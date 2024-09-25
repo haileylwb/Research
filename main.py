@@ -1,5 +1,5 @@
 import random
-import matplotlib.pyplot as plot
+import matplotlib.pyplot as plt
 
 # n = k + 1 nodes
 # p = probability of flipping
@@ -46,10 +46,10 @@ def sortSequences(sequences):
 def calculatePr(sequence):
   # how many sequences where x1 = x0 , divided by number of sequences
   count = 0
-  for sequence in sequences:
-    if sequence[0] == sequence[1]:
+  for seq in sequence:
+    if seq[0] == seq[1]:
       count+=1
-  return round(count/len(sequences))
+  return round(count/len(sequence))
 
 
 def plotPr(node_counts, probabilities):
