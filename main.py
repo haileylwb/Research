@@ -53,28 +53,32 @@ def calculatePr(sequence):
 
 
 def plotPr(node_counts, probabilities):
-    plt.plot(node_counts, probabilities, marker='o')
-    plt.xticks(node_counts)
-    plt.xlabel('Number of Nodes')
-    plt.ylabel('Probability that x1 = x0')
-    plt.title('Probability of x1 = x0 vs Number of Nodes')
-    plt.ylim(0, 1) 
-    plt.grid()
-    plt.show()
+  plt.plot(node_counts, probabilities, marker='o')
+  plt.xticks(node_counts)
+  plt.xlabel('Number of Nodes')
+  plt.ylabel('Probability that x1 = x0')
+  plt.title('Probability of x1 = x0 vs Number of Nodes')
+  plt.ylim(0, 1) 
+  plt.grid()
+  plt.show()
 
   
 def main():
   p = 0.5  
   s = 100
-  node_counts = range(2, 11)  # Node from 2 to 10
-  probabilities = []
+  nodes = range(2, 11)  # Node from 2 to 10
+  probabilitiesA = []
+  probabilitiesB = []
 
-  for n in node_counts:
+  for n in nodes:
     sequences = createSequences(n, p, s)
-    probability = calculatePr(sequences)
-    probabilities.append(probability)
+    typeA, typeB = sortSequences(sequences)
+    probabilityA = calculatePr(typeA)
+    probabilitiesA.append(probabilityA)
+    probabilityB = calculatePr(typeB)
+    probabilitiesA.append(probabilityB)
 
-  plotPr(node_counts, probabilities)
+  plotPr(node_counts, probabilitiesA)
 
 
 if __name__ == "__main__":
