@@ -15,7 +15,7 @@ def createSequences(n, p, s):
 
     # Rest of the nodes
     for j in range(1, n):
-      if random.randint(0,100) < p*100
+      if random.random() < p:
         x = 1 - x
       sequence.append(x)
 
