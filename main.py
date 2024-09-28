@@ -44,7 +44,7 @@ def sortSequences(sequences):
 
 
 def calculatePr(sequence, k):
-  # how many sequences where x1 = x0 , divided by number of sequences
+  # how many sequences where x0 = xk , divided by number of sequences
   count = 0
   for seq in sequence:
     if seq[0] == seq[k]:
@@ -56,8 +56,8 @@ def plotPr(node_counts, probabilities):
   plt.plot(node_counts, probabilities, marker='o')
   plt.xticks(node_counts)
   plt.xlabel('Number of Nodes')
-  plt.ylabel('Probability that x1 = x0')
-  plt.title('Probability of x1 = x0 vs Number of Nodes')
+  plt.ylabel('Probability that x0 = xk')
+  plt.title('Probability of x0 = xk vs Number of Nodes')
   plt.ylim(0, 1)
   plt.grid()
   plt.show()
@@ -66,16 +66,19 @@ def plotPr(node_counts, probabilities):
 def main():
   p = 0.25
   s = 50000
-  nodes = range(2, 1000)  # Node from 2 to 10
+  k = 5 # desired index of node we want to look at
+  nodes = range(7,21)  # Node from 2 to 10
   probabilitiesA = []
   probabilitiesB = []
 
   for n in nodes:
     sequences = createSequences(n, p, s)
     typeA, typeB = sortSequences(sequences)
-    probabilityA = calculatePr(typeA, 5)
+    if k < n:
+        probabilityA = calculatePr(typeA, k)
     probabilitiesA.append(probabilityA)
-    probabilityB = calculatePr(typeB, 5)
+    if k < n:
+        probabilityB = calculatePr(typeB, k)
     probabilitiesB.append(probabilityB)
     #printSequence(typeA)
     #printSequence(probabilitiesA)
