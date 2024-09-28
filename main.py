@@ -15,7 +15,7 @@ def createSequences(n, p, s):
     sequence.append(x)
     
     # remaining nodes
-    for j in range(1, n+1):
+    for j in range(1, n):
       if random.random() < p:
         x = 1 - x
       sequence.append(x)
@@ -65,7 +65,7 @@ def plotPr(node_counts, probabilities):
   
 def main():
   p = 0.25
-  s = 500
+  s = 50000
   nodes = range(2, 1000)  # Node from 2 to 10
   probabilitiesA = []
   probabilitiesB = []
