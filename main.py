@@ -43,11 +43,11 @@ def sortSequences(sequences):
   return typeA, typeB
 
 
-def calculatePr(sequence):
+def calculatePr(sequence, k):
   # how many sequences where x1 = x0 , divided by number of sequences
   count = 0
   for seq in sequence:
-    if seq[0] == seq[1]:
+    if seq[0] == seq[k]:
       count+=1
   return round((count/len(sequence)), 2)
 
@@ -73,9 +73,9 @@ def main():
   for n in nodes:
     sequences = createSequences(n, p, s)
     typeA, typeB = sortSequences(sequences)
-    probabilityA = calculatePr(typeA)
+    probabilityA = calculatePr(typeA, 5)
     probabilitiesA.append(probabilityA)
-    probabilityB = calculatePr(typeB)
+    probabilityB = calculatePr(typeB, 5)
     probabilitiesB.append(probabilityB)
     #printSequence(typeA)
     #printSequence(probabilitiesA)
