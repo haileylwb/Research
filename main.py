@@ -4,22 +4,18 @@ import matplotlib.pyplot as plt
 # n = k + 1 nodes
 # p = probability of flipping
 # s = number of sequences created
+
 def createSequences(n, p, s):
   sequences = []
   
   for i in range(s):
     sequence = []
-    
-    # first node
-    x = random.randint(0,1)
+    x = random.randint(0,1) # first node
     sequence.append(x)
-    
-    # remaining nodes
-    for j in range(1, n):
+    for j in range(1, n):     # remaining nodes
       if random.random() < p:
         x = 1 - x
       sequence.append(x)
-      
     sequences.append(sequence)
   return sequences
 
@@ -30,17 +26,16 @@ def printSequence(sequences):
   return
 
 
-def sortSequences(sequences):
-  typeA = [] # same start and end node values
-  typeB = [] # different start and end node values
-
-  for sequence in sequences:
-    if sequence[0] == sequence[-1]:
-      typeA.append(sequence)
-    else:
-      typeB.append(sequence)
-
-  return typeA, typeB
+#def sortSequences(sequences):
+#  typeA = [] # same start and end node values
+#  typeB = [] # different start and end node values
+#  
+#  for sequence in sequences:
+#    if sequence[0] == sequence[-1]:
+#      typeA.append(sequence)
+#    else:
+#      typeB.append(sequence)
+#  return typeA, typeB
 
 
 def calculatePr(sequence, k):
@@ -63,39 +58,70 @@ def plotPr(node_counts, probabilities):
   plt.show()
 
 
-#def estimate():
-# given two node indexes
-# take the left side of i (check if i isnt the leftmost node
-# take the right side of j (check if j isnt the rightmost node)
-# look at the inbetween
-
-# take the number of nodes time the probability of ??
-# n - the estimate for the est. number of 1's
- 
-# if given a list with the index and values
-# iterate through the list (assume its sorted increasing order based on index)
-# calculate up to the first entry
-#
-# calculate whatever after the last entry
-
-# _ x _  _ y _ z _ _ _
-
-
-# def prMoreZeros():
-# for all the simulations count how many have more 0's
+def match(sequences, known):
+    matchSequences = []
+    for sequence in sequences:
+        match == True
+        for node in known:
+            if sequence[node['index']] != node['value']:
+                match == False
+                break
+        if match:
+            matchSequences.append(sequence)
+    return matchSequences
     
-  
-def main():
-  p = 0.25
-  s = 50000
-  k = 1 # desired index of node we want to look at
-  nodes = range(2,21)  # Nodes from 7 to 20
+    
+def sortIntervals(sequences, known):
+    typeA = []
+    typeB = []
+    knownIndices = [node['index'] for node in known]
+    
+    for sequence in sequences:
+        if knownIndices[0] > 0: # left interval
+            leftInterval = sequence[:knownIndices[0]]
+            if leftInterval and leftInterval[0] == leftInterval[-1]:
+                typeA.append(leftInterval)
+            else:
+                typeB.append(rightInterval)
+        for i in range(len(known_indices) - 1):
+            start = knownIndices[i]
+            end = knownIndices[i + 1]
+            betweenInterval = sequence[start:end]
+            if betweenInterval and betweenInterval[0] == betweenInterval[-1]:
+                typeA_intervals.append(betweenInterval)
+            else:
+                typeB_intervals.append(betweenInterval)
+        if knownIndices[-1] < len(sequence): # right interval
+            rightInterval = sequence[known_indices[-1] + 1:]
+            if rightInterval and rightInterval[0] == rightInterval[-1]:
+                typeA.append(rightInterval)
+            else:
+                typeB.append(rightInterval)
+    return typeA, typeB
+    
+
+#def estimate(sequence, known):
+#    count = 0
+#    for node in known:
+#    TODO
+        
+        
+def main(): # Not working yet
+  p = 0.25  # Probability
+  s = 50000 # Sequences generated
+  k = 1     # Desired index
+  nodes = range(2,21)
+  matchSequences = []
   probabilitiesA = []
   probabilitiesB = []
+  
+  # Nodes with values we know, using dictionary
+  knownNodes = [{'index': 1, 'value': 0}, {'index': 2, 'value': 1}, {'index': 3, 'value': 0}, {'index': 4, 'value': 1}]
 
   for n in nodes:
     sequences = createSequences(n, p, s)
-    typeA, typeB = sortSequences(sequences)
+    matchSequences = match(sequences, knownNodes)
+    typeA, typeB = sortIntervals(sequences)
     if k < n and k > 0: # check if k is in the range of n nodes
         probabilityA = calculatePr(typeA, k)
         probabilitiesA.append(probabilityA)
