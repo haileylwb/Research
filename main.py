@@ -107,7 +107,7 @@ def more0(sequences):
         count = 0
         m = len(sequence)
         count += sum(sequence)
-        if count > (m - count):
+        if count < (m - count):
             more0sequences += 1
     return more0sequences / n
 
@@ -126,9 +126,9 @@ def printSequence(sequences):
 # Main method
 
 def main():
-    p = 0.25    # Probability
-    s = 10      # Sequences generated #0000
-    #k = 1      # Desired index
+    p = 0.25        # Probability
+    s = 500000      # Sequences generated
+    #k = 1          # Desired index
     nodes = range(10,11)
     sequences = []
     
@@ -137,7 +137,11 @@ def main():
     
     for n in nodes:
         sequences = createSequencesKnown(n, p, s, knownNodes)
-        printSequence(sequences)
+        #printSequence(sequences)
+    print("Average number of 0's")
+    print(avg0(sequences))
+    print("Proportion of Sequences with More 0's")
+    print(more0(sequences))
 
 
 # Run main method
