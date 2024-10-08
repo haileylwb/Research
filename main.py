@@ -32,12 +32,15 @@ def createSequencesKnown(n, p, s, known):
     
     for i in range(s):
         sequence = [None] * n
-        for index, value in knownIndices.items():  # Set knowns
+        # Set knowns
+        for index, value in knownIndices.items():
             sequence[index] = value
+        # First node
         if 0 not in knownIndices:
-            x = random.randint(0,1)                # First node
+            x = random.randint(0,1)
             sequence[0] = x
-        for j in range(1, n):                      # Other nodes
+        # After first known
+        for j in range(1, n):
             if sequence[j] is None:
                 x = sequence[j - 1]
                 if random.random() < p:
@@ -129,7 +132,7 @@ def main():
     p = 0.25        # Probability
     s = 500000      # Sequences generated
     #k = 1          # Desired index
-    nodes = range(10,11)
+    nodes = range(10,12)
     sequences = []
     
     # Nodes with values we know, using dictionary
@@ -137,11 +140,12 @@ def main():
     
     for n in nodes:
         sequences = createSequencesKnown(n, p, s, knownNodes)
-        #printSequence(sequences)
-    print("Average number of 0's")
-    print(avg0(sequences))
-    print("Proportion of Sequences with More 0's")
-    print(more0(sequences))
+        print(f"Sequences with {n} nodes:")
+        print("Average number of 0's")
+        print(avg0(sequences))
+        print("Proportion of Sequences with More 0's")
+        print(more0(sequences))
+        print("---")
 
 
 # Run main method
