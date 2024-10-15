@@ -35,18 +35,31 @@ def createSequencesKnown(n, p, s, known):
         # Set knowns
         for index, value in knownIndices.items():
             sequence[index] = value
-        # First node
-        if 0 not in knownIndices:
-            x = random.randint(0,1)
-            sequence[0] = x
-        # After first known
-        for j in range(1, n):
+        firstKnownIndex = list(knownIndices.keys())[0]
+        lastKnownIndex = list(knownIndices.keys())[-1]
+
+        # Before first known
+        for j in range(firstKnownIndex, -1, -1):
             if sequence[j] is None:
-                x = sequence[j - 1]
+                x = sequence[j + 1]
                 if random.random() < p:
                     sequence[j] = 1 - x
                 else:
                     sequence[j] = x
+        # After last known
+        for k in range(lastKnownIndex, n):
+            if sequence[k] is None:
+                x = sequence[k - 1]
+                if random.random() < p:
+                    sequence[k] = 1 - x
+                else:
+                    sequence[k] = x
+
+
+        # Rejection sampling in the middle
+
+                    
+
         sequences.append(sequence)
     return sequences
 
@@ -129,17 +142,18 @@ def printSequence(sequences):
 # Main method
 
 def main():
-    p = 0.25        # Probability
-    s = 500000      # Sequences generated
+    p = 0.2         # Probability
+    s = 5000000     # Sequences generated
     #k = 1          # Desired index
-    nodes = range(10,12)
+    nodes = range(4,5)
     sequences = []
     
     # Nodes with values we know, using dictionary
-    knownNodes = [{'index': 1, 'value': 0}, {'index': 4, 'value': 1}, {'index': 6, 'value': 0}]
+    knownNodes = [{'index': 1, 'value': 0}, {'index': 2, 'value': 1}]
     
     for n in nodes:
         sequences = createSequencesKnown(n, p, s, knownNodes)
+        printSequence(sequences)
         print(f"Sequences with {n} nodes:")
         print("Average number of 0's")
         print(avg0(sequences))
@@ -152,3 +166,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+    # will majority always work and when does it not?
