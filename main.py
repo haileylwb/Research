@@ -55,9 +55,11 @@ def createSequencesKnown(n, p, s, known):
                 else:
                     sequence[k] = x
 
-
         # Rejection sampling in the middle
-
+        createSequences(n, p, s) # replace n 
+        # sort the sequences if they match 00 01 10 11 values of the index endpoints
+        # keep the ones that match and add the values (what am i adding to what? how do i get enough sequences?)
+        # store it as a sequence
                     
 
         sequences.append(sequence)
