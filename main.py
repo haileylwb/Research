@@ -28,15 +28,16 @@ def createSequences(n, p, s):
 
 def createSequencesKnown(n, p, s, known):
     sequences = []
-    knownIndices = {node['index']: node['value'] for node in known}
+    knowns = {node['index']: node['value'] for node in known}
     
     for i in range(s):
         sequence = [None] * n
         # Set knowns
-        for index, value in knownIndices.items():
+        for index, value in knowns.items():
             sequence[index] = value
-        firstKnownIndex = list(knownIndices.keys())[0]
-        lastKnownIndex = list(knownIndices.keys())[-1]
+        knownIndexList = list(knowns.keys())
+        firstKnownIndex = knownIndexList[0]
+        lastKnownIndex = knownIndexList[-1]
 
         # Before first known
         for j in range(firstKnownIndex, -1, -1):
@@ -56,11 +57,17 @@ def createSequencesKnown(n, p, s, known):
                     sequence[k] = x
 
         # Rejection sampling in the middle
-        createSequences(n, p, s) # replace n 
-        # sort the sequences if they match 00 01 10 11 values of the index endpoints
-        # keep the ones that match and add the values (what am i adding to what? how do i get enough sequences?)
-        # store it as a sequence
-                    
+        for m in range(len(knownIndexList) - 1):
+            startIndex = knownIndexList[m]
+            endIndex = knownIndexList[m + 1]
+
+            matched = False
+            while not matched:
+                temp_sequence = createSequences(endIndex - startIndex + 1, p, 1)[0]  
+                if (temp_sequence[0] == sequence[startIndex]) and (temp_sequence[-1] == sequence[endIndex]):
+                    for index in range(startIndex + 1, endIndex):
+                        sequence[index] = temp_sequence[index - startIndex]
+                    matched = True
 
         sequences.append(sequence)
     return sequences
