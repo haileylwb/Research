@@ -63,7 +63,7 @@ def createSequencesKnown(n, p, s, known):
 
             matched = False
             while not matched:
-                temp_sequence = createSequences(endIndex - startIndex + 1, p, 1)[0]  
+                temp_sequence = createSequences(endIndex - startIndex + 1, p, 1)[0]
                 if (temp_sequence[0] == sequence[startIndex]) and (temp_sequence[-1] == sequence[endIndex]):
                     for index in range(startIndex + 1, endIndex):
                         sequence[index] = temp_sequence[index - startIndex]
@@ -135,7 +135,37 @@ def more0(sequences):
         if count < (m - count):
             more0sequences += 1
     return more0sequences / n
+    
+    
+# Calculates proportion of sequences that have more 0's than 1's
 
+def more1(sequences):
+    n = len(sequences)
+    more1sequences = 0
+    
+    for sequence in sequences:
+        count = 0
+        m = len(sequence)
+        count += sum(sequence)
+        if count > (m - count):
+            more1sequences += 1
+    return more1sequences / n
+    
+
+# Calculates proportion of sequences that have equal number of 0's and 1's
+
+def equal01(sequences):
+    n = len(sequences)
+    equalSequences = 0
+    
+    for sequence in sequences:
+        count = 0
+        m = len(sequence)
+        count += sum(sequence)
+        if count == (m - count):
+            equalSequences += 1
+    return equalSequences / n
+    
 
 # Print for testing
 
@@ -162,12 +192,16 @@ def main():
     
     for n in nodes:
         sequences = createSequencesKnown(n, p, s, knownNodes)
-        printSequence(sequences)
+        #printSequence(sequences)
         print(f"Sequences with {n} nodes:")
         print("Average number of 0's")
         print(avg0(sequences))
         print("Proportion of Sequences with More 0's")
         print(more0(sequences))
+        print("Proportion of Sequences with More 1's")
+        print(more1(sequences))
+        print("Proportion of Sequences with Equal 0's and 1's")
+        print(equal01(sequences))
         print("---")
 
 
