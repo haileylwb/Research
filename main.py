@@ -194,14 +194,10 @@ def main():
         sequences = createSequencesKnown(n, p, s, knownNodes)
         #printSequence(sequences)
         print(f"Sequences with {n} nodes:")
-        print("Average number of 0's")
-        print(avg0(sequences))
-        print("Proportion of Sequences with More 0's")
-        print(more0(sequences))
-        print("Proportion of Sequences with More 1's")
-        print(more1(sequences))
-        print("Proportion of Sequences with Equal 0's and 1's")
-        print(equal01(sequences))
+        print("Average number of 0's: " + str(avg0(sequences)))
+        print("Proportion of Sequences with More 0's: " + str(more0(sequences)))
+        print("Proportion of Sequences with More 1's: " + str(more1(sequences)))
+        print("Proportion of Sequences with Equal 0's and 1's: " + str(equal01(sequences)))
         print("---")
 
 
