@@ -73,6 +73,51 @@ def createSequencesKnown(n, p, s, known):
     return sequences
 
 
+# Creates random known values for a fixed number of knowns n//3
+# Has more 1's than 0's
+def randomSampling(n):
+    knownNodes = []
+    if n < 3:
+        knownNodes.append({'index': 0, 'value': 1})
+    else:
+        numKnown = n // 3
+        majorityCount = (numKnown // 2) + 1
+        minorityCount = numKnown - majorityCount
+        knownIndices = random.sample(range(n), numKnown)
+
+        for index in knownIndices:
+            if majorityCount > 0:
+                knownNodes.append({'index': index, 'value': 1})
+                majorityCount -= 1
+            else:
+                knownNodes.append({'index': index, 'value': 0})
+        for i in range(n):
+            if len(knownNodes) >= numKnown:
+                break
+            if i not in [node['index'] for node in knownNodes] and majorityCount > 0:
+                knownNodes.append({'index': i, 'value': 1})
+                majorityCount -= 1
+
+    knownNodes.sort(key=lambda x: x['index'])
+    return knownNodes
+
+
+# Calculate the proportion of the majority value in the sequences
+def majorityProportion(sequences):
+    n = len(sequences)
+    m = len(sequences[0])
+    majorityCount = 0
+    
+    for sequence in sequences:
+        count1 = sum(sequence)
+        count0 = m - count1
+        
+        if count1 > count0:
+            majorityCount += 1
+            
+    return majorityCount / n
+    
+    
 # Sorts sequences by same or different starting and ending nodes
 
 #def sortSequences(sequences):
@@ -96,6 +141,18 @@ def calculatePr(sequence, k):
         if seq[0] == seq[k]:
             count += 1
     return round((count/len(sequence)), 2)
+
+
+# Graphs the average % majority on the y-axis with n nodes on the x-axis
+def plotAverageMajority(node_counts, probabilities):
+    plt.plot(node_counts, probabilities, marker='o')
+    plt.xticks(node_counts)
+    plt.xlabel('Number of Nodes')
+    plt.ylabel('Average % Majority')
+    plt.title('Average Majority Proportion vs Number of Nodes')
+    plt.ylim(0, 1)
+    plt.grid()
+    plt.show()
 
 
 # Graphing the probability that x0 = xk for varying number of nodes
@@ -182,17 +239,23 @@ def printSequence(sequences):
 
 def main():
     p = 0.2         # Probability
-    s = 5000000     # Sequences generated
+    s = 500000      # Sequences generated
     #k = 1          # Desired index
-    nodes = range(4,5)
+    nodes = range(10,101)
     sequences = []
+    majority_proportions = []
     
     # Nodes with values we know, using dictionary
-    knownNodes = [{'index': 1, 'value': 0}, {'index': 2, 'value': 1}]
+#    knownNodes = [{'index': 0, 'value': 1}, {'index': 1, 'value': 1}, {'index': 2, 'value': 0}, {'index': 5, 'value': 0}, {'index': 6, 'value': 1}]
     
     for n in nodes:
+#        knownNodes = [{'index': 0, 'value': 1}, {'index': 1, 'value': 1}, {'index': 2, 'value': 1}, {'index': n-2, 'value': 0}, {'index': n-1, 'value': 0}]
+        knownNodes = randomSampling(n)
         sequences = createSequencesKnown(n, p, s, knownNodes)
-        #printSequence(sequences)
+        proportion = majorityProportion(sequences)
+        majority_proportions.append(proportion)
+    
+    
         print(f"Sequences with {n} nodes:")
         print("Average number of 0's: " + str(avg0(sequences)))
         print("Proportion of Sequences with More 0's: " + str(more0(sequences)))
@@ -200,10 +263,9 @@ def main():
         print("Proportion of Sequences with Equal 0's and 1's: " + str(equal01(sequences)))
         print("---")
 
+    plotAverageMajority(nodes, majority_proportions)
 
 # Run main method
 
 if __name__ == "__main__":
     main()
-
-    # will majority always work and when does it not?
