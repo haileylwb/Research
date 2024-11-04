@@ -81,7 +81,8 @@ def randomSampling(n):
         knownNodes.append({'index': 0, 'value': 1})
     else:
         numKnown = n // 3
-        majorityCount = (numKnown // 2) + 1
+        # The number of 1's will be at least half to up to all the knowns
+        majorityCount = random.randint((numKnown // 2) + 1, numKnown)
         minorityCount = numKnown - majorityCount
         knownIndices = random.sample(range(n), numKnown)
 
@@ -91,13 +92,6 @@ def randomSampling(n):
                 majorityCount -= 1
             else:
                 knownNodes.append({'index': index, 'value': 0})
-        for i in range(n):
-            if len(knownNodes) >= numKnown:
-                break
-            if i not in [node['index'] for node in knownNodes] and majorityCount > 0:
-                knownNodes.append({'index': i, 'value': 1})
-                majorityCount -= 1
-
     knownNodes.sort(key=lambda x: x['index'])
     return knownNodes
 
@@ -239,31 +233,34 @@ def printSequence(sequences):
 
 def main():
     p = 0.2         # Probability
-    s = 500000      # Sequences generated
+    s = 50000      # Sequences generated
     #k = 1          # Desired index
-    nodes = range(10,101)
-    sequences = []
-    majority_proportions = []
+    nodes = range(5,30)
+    proportions = []
     
     # Nodes with values we know, using dictionary
 #    knownNodes = [{'index': 0, 'value': 1}, {'index': 1, 'value': 1}, {'index': 2, 'value': 0}, {'index': 5, 'value': 0}, {'index': 6, 'value': 1}]
     
     for n in nodes:
+        sequences = []
 #        knownNodes = [{'index': 0, 'value': 1}, {'index': 1, 'value': 1}, {'index': 2, 'value': 1}, {'index': n-2, 'value': 0}, {'index': n-1, 'value': 0}]
-        knownNodes = randomSampling(n)
-        sequences = createSequencesKnown(n, p, s, knownNodes)
-        proportion = majorityProportion(sequences)
-        majority_proportions.append(proportion)
-    
-    
-        print(f"Sequences with {n} nodes:")
-        print("Average number of 0's: " + str(avg0(sequences)))
-        print("Proportion of Sequences with More 0's: " + str(more0(sequences)))
-        print("Proportion of Sequences with More 1's: " + str(more1(sequences)))
-        print("Proportion of Sequences with Equal 0's and 1's: " + str(equal01(sequences)))
-        print("---")
+        # For every sample generated, we want there to be a new dictionary of knownNodes
+        for i in range(s):
+            knownNodes = randomSampling(n)
+            sequence = createSequencesKnown(n, p, 1, knownNodes)
+            sequences.append(sequence[0])
 
-    plotAverageMajority(nodes, majority_proportions)
+        proportion = majorityProportion(sequences)
+        proportions.append(proportion)
+            
+#        print(f"Sequences with {n} nodes:")
+#        print("Average number of 0's: " + str(avg0(sequences)))
+#        print("Proportion of Sequences with More 0's: " + str(more0(sequences)))
+#        print("Proportion of Sequences with More 1's: " + str(more1(sequences)))
+#        print("Proportion of Sequences with Equal 0's and 1's: " + str(equal01(sequences)))
+#        print("---")
+
+    plotAverageMajority(nodes, proportions)
 
 # Run main method
 
