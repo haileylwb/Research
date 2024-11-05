@@ -81,8 +81,10 @@ def randomSampling(n):
         knownNodes.append({'index': 0, 'value': 1})
     else:
         numKnown = n // 3
+        # The number of 1's will be half or half+1 the number of knowns
         # The number of 1's will be at least half to up to all the knowns
-        majorityCount = random.randint((numKnown // 2) + 1, numKnown)
+        majorityCount = (numKnown // 2) + 1
+        #majorityCount = random.randint((numKnown // 2) + 1, numKnown)
         minorityCount = numKnown - majorityCount
         knownIndices = random.sample(range(n), numKnown)
 
@@ -236,6 +238,7 @@ def main():
     s = 50000      # Sequences generated
     #k = 1          # Desired index
     nodes = range(5,30)
+    #nodes = [31, 33, 35, 37, 39, 41, 43, 45, 75, 77, 79, 81, 83, 85]
     proportions = []
     
     # Nodes with values we know, using dictionary
@@ -244,6 +247,7 @@ def main():
     for n in nodes:
         sequences = []
 #        knownNodes = [{'index': 0, 'value': 1}, {'index': 1, 'value': 1}, {'index': 2, 'value': 1}, {'index': n-2, 'value': 0}, {'index': n-1, 'value': 0}]
+
         # For every sample generated, we want there to be a new dictionary of knownNodes
         for i in range(s):
             knownNodes = randomSampling(n)
