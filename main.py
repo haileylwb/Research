@@ -194,10 +194,21 @@ def equal01(sequences):
     return equalSequences / n
     
     
-# Calculate Pr( X(k) = V | X(0) = V, X(k+2) = V)
-# When k = 1, we get ((1-p) * (1 + (1-2p)^k)) / (1 + (1-2p)^k)
+# Calculate Pr( X(x+1) = V | X(0) = V, X(k+1) = V)
+# When x = 0, we get ((1-p) * (1 + (1-2p)^k)) / (1 + (1-2p)^k)
+
+def calculateProbInBetweenSame(k, x, p):
+    probBothV = (1 + (1-2p)**k)
+    return (0.5 * ((1-2p)**x + 1)) * probBothV / probBothV
 
 
+# Calculate Pr( X(x+1) = V | X(0) = V, X(k+1) = V)
+# When x = 0, we get ((1-p) * (1 + (1-2p)^k)) / (1 + (1-2p)^k)
+
+#def calculateProbInBetweenDiff():
+#    return 0
+    
+    
 # We have node X(i) and X(i+k+1) with the SAME value V, with k nodes in-between
 # For each node, calculate the probability it has value V
 # Use the math summation thingy we found
@@ -209,12 +220,12 @@ def estimateInBetweenSame(k, v, p):
     # By symmetry, we can just calculate the first half and multiply by 2
     end = (k // 2)
     for i in range(end):
-        expected += 1 #CHANGE THIS
+        expected += calculateProbInBetweenSame(k, i, p)
         
     # If there is an odd number of nodes, calculate middle node separately
     if (k % 2) == 1:
         mid = k // 2
-        expected += 1 # CHANGE THIS
+        expected += calculateProbInBetweenSame(k, mid, p)
     return expected
     
 
@@ -223,11 +234,10 @@ def estimateInBetweenSame(k, v, p):
 # Use the math summation thingy we found
 # The sum of the probabilities will be the estimated number of V's in-between
 
-#def estimateInBetweenSame(k, v):
+#def estimateInBetweenDIff(k, v1, v2, p):
 #    return
     
     
-
 # Graphs the average % majority on the y-axis with n nodes on the x-axis
 def plotAverageMajority(node_counts, probabilities):
     plt.plot(node_counts, probabilities, marker='o')
