@@ -72,6 +72,20 @@ def createSequencesKnown(n, p, s, known):
         sequences.append(sequence)
     return sequences
 
+    
+# Sorts sequences by same or different starting and ending nodes
+
+#def sortSequences(sequences):
+#   typeA = [] # same start and end node values
+#   typeB = [] # different start and end node values
+#
+#   for sequence in sequences:
+#       if sequence[0] == sequence[-1]:
+#           typeA.append(sequence)
+#   else:
+#       typeB.append(sequence)
+#   return typeA, typeB
+
 
 # Creates random known values for a fixed number of knowns n//3
 # Has more 1's than 0's
@@ -113,21 +127,6 @@ def majorityProportion(sequences):
             
     return majorityCount / n
     
-    
-# Sorts sequences by same or different starting and ending nodes
-
-#def sortSequences(sequences):
-#   typeA = [] # same start and end node values
-#   typeB = [] # different start and end node values
-#
-#   for sequence in sequences:
-#       if sequence[0] == sequence[-1]:
-#           typeA.append(sequence)
-#   else:
-#       typeB.append(sequence)
-#   return typeA, typeB
-
-
 # k = given index
 # Calculates how many sequences satisfy x0 = xk, divided by number of sequences
 
@@ -137,32 +136,7 @@ def calculatePr(sequence, k):
         if seq[0] == seq[k]:
             count += 1
     return round((count/len(sequence)), 2)
-
-
-# Graphs the average % majority on the y-axis with n nodes on the x-axis
-def plotAverageMajority(node_counts, probabilities):
-    plt.plot(node_counts, probabilities, marker='o')
-    plt.xticks(node_counts)
-    plt.xlabel('Number of Nodes')
-    plt.ylabel('Average % Majority')
-    plt.title('Average Majority Proportion vs Number of Nodes')
-    plt.ylim(0, 1)
-    plt.grid()
-    plt.show()
-
-
-# Graphing the probability that x0 = xk for varying number of nodes
-
-def plotPr(node_counts, probabilities):
-    plt.plot(node_counts, probabilities, marker='o')
-    plt.xticks(node_counts)
-    plt.xlabel('Number of Nodes')
-    plt.ylabel('Probability that x0 = xk')
-    plt.title('Probability of x0 = xk vs Number of Nodes')
-    plt.ylim(0, 1)
-    plt.grid()
-    plt.show()
-
+    
 
 # Calculates average number of 0's
 
@@ -219,6 +193,65 @@ def equal01(sequences):
             equalSequences += 1
     return equalSequences / n
     
+    
+# Calculate Pr( X(k) = V | X(0) = V, X(k+2) = V)
+# When k = 1, we get ((1-p) * (1 + (1-2p)^k)) / (1 + (1-2p)^k)
+
+
+# We have node X(i) and X(i+k+1) with the SAME value V, with k nodes in-between
+# For each node, calculate the probability it has value V
+# Use the math summation thingy we found
+# The sum of the probabilities will be the estimated number of V's in-between
+# Expected # of not V = k - Expected # of V
+
+def estimateInBetweenSame(k, v, p):
+    expected = 0
+    # By symmetry, we can just calculate the first half and multiply by 2
+    end = (k // 2)
+    for i in range(end):
+        expected += 1 #CHANGE THIS
+        
+    # If there is an odd number of nodes, calculate middle node separately
+    if (k % 2) == 1:
+        mid = k // 2
+        expected += 1 # CHANGE THIS
+    return expected
+    
+
+# We have node X(i) and X(i+k+1) with the DIFFERENT VALUES, with k nodes in-between
+# For each node, calculate the probability it has value V
+# Use the math summation thingy we found
+# The sum of the probabilities will be the estimated number of V's in-between
+
+#def estimateInBetweenSame(k, v):
+#    return
+    
+    
+
+# Graphs the average % majority on the y-axis with n nodes on the x-axis
+def plotAverageMajority(node_counts, probabilities):
+    plt.plot(node_counts, probabilities, marker='o')
+    plt.xticks(node_counts)
+    plt.xlabel('Number of Nodes')
+    plt.ylabel('Average % Majority')
+    plt.title('Average Majority Proportion vs Number of Nodes')
+    plt.ylim(0, 1)
+    plt.grid()
+    plt.show()
+
+
+# Graphing the probability that x0 = xk for varying number of nodes
+
+def plotPr(node_counts, probabilities):
+    plt.plot(node_counts, probabilities, marker='o')
+    plt.xticks(node_counts)
+    plt.xlabel('Number of Nodes')
+    plt.ylabel('Probability that x0 = xk')
+    plt.title('Probability of x0 = xk vs Number of Nodes')
+    plt.ylim(0, 1)
+    plt.grid()
+    plt.show()
+
 
 # Print for testing
 
@@ -226,9 +259,9 @@ def printSequence(sequences):
     for sequence in sequences:
         print(sequence)
     return
+    
 
-
-# ------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------
 
 
 # Main method
