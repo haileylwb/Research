@@ -198,8 +198,8 @@ def equal01(sequences):
 # When x = 0, we get ((1-p) * (1 + (1-2p)^k)) / (1 + (1-2p)^k)
 
 def calculateProbInBetweenSame(k, x, p):
-    probBothV = (1 + (1-2p)**k)
-    return (0.5 * ((1-2p)**x + 1)) * probBothV / probBothV
+    probBothV = (1 + (1-2*p)**k)
+    return (0.5 * ((1-2*p)**x + 1)) * probBothV / probBothV
 
 
 # Calculate Pr( X(x+1) = V | X(0) = V, X(k+1) = V)
@@ -221,11 +221,12 @@ def estimateInBetweenSame(k, v, p):
     end = (k // 2)
     for i in range(end):
         expected += calculateProbInBetweenSame(k, i, p)
-        
-    # If there is an odd number of nodes, calculate middle node separately
-    if (k % 2) == 1:
-        mid = k // 2
-        expected += calculateProbInBetweenSame(k, mid, p)
+    if k > 1: # If k was one then we end up double counting?
+        expected *= 2
+        # If there is an odd number of nodes, calculate middle node separately
+        if (k % 2) == 1:
+            mid = k // 2
+            expected += calculateProbInBetweenSame(k, mid, p)
     return expected
     
 
@@ -308,6 +309,8 @@ def main():
 #        print("---")
 
     plotAverageMajority(nodes, proportions)
+    
+    #print(estimateInBetweenSame(3, 0, .5))
 
 # Run main method
 
