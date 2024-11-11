@@ -202,9 +202,9 @@ def equal01(sequences):
 # Calculate Pr( X(x+1) = V | X(0) = V, X(k+1) = V)
 # When x = 0, we get ((1-p) * (1 + (1-2p)^k)) / (1 + (1-2p)^k)
 
-def calculateProbInBetweenSame(k, x, p):
-    probBothV = (1 + (1-2*p)**k)
-    return (0.5 * ((1-2*p)**x + 1)) * probBothV / probBothV
+#def calculateProbInBetweenSame(k, x, p):
+#    probBothV = (1 + (1-2*p)**k)
+#    return (0.5 * ((1-2*p)**x + 1)) * probBothV / probBothV
 
 
 # Calculate Pr( X(x+1) = V | X(0) = V, X(k+1) = V)
@@ -220,19 +220,19 @@ def calculateProbInBetweenSame(k, x, p):
 # The sum of the probabilities will be the estimated number of V's in-between
 # Expected # of not V = k - Expected # of V
 
-def estimateInBetweenSame(k, v, p):
-    expected = 0
-    # By symmetry, we can just calculate the first half and multiply by 2
-    end = (k // 2)
-    for i in range(end):
-        expected += calculateProbInBetweenSame(k, i, p)
-    if k > 1: # If k was one then we end up double counting?
-        expected *= 2
-        # If there is an odd number of nodes, calculate middle node separately
-        if (k % 2) == 1:
-            mid = k // 2
-            expected += calculateProbInBetweenSame(k, mid, p)
-    return expected
+#def estimateInBetweenSame(k, v, p):
+#    expected = 0
+#    # By symmetry, we can just calculate the first half and multiply by 2
+#    end = (k // 2)
+#    for i in range(end):
+#        expected += calculateProbInBetweenSame(k, i, p)
+#    if k > 1: # If k was one then we end up double counting?
+#        expected *= 2
+#        # If there is an odd number of nodes, calculate middle node separately
+#        if (k % 2) == 1:
+#            mid = k // 2
+#            expected += calculateProbInBetweenSame(k, mid, p)
+#    return expected
     
 
 # We have node X(i) and X(i+k+1) with the DIFFERENT VALUES, with k nodes in-between
@@ -247,6 +247,19 @@ def estimateInBetweenSame(k, v, p):
 # Graphs the average % majority on the y-axis with n nodes on the x-axis
 def plotAverageMajority(node_counts, probabilities):
     plt.plot(node_counts, probabilities, marker='o')
+    plt.xticks(node_counts)
+    plt.xlabel('Number of Nodes')
+    plt.ylabel('Average % Majority')
+    plt.title('Average Majority Proportion vs Number of Nodes')
+    plt.ylim(0, 1)
+    plt.grid()
+    plt.show()
+
+
+# Graphs the % majority of 1's and 0's
+def plotMajority(node_counts, probabilities0, probabilities1):
+    plt.plot(node_counts, probabilities0, marker='o', label='Probabilities 0')
+    plt.plot(node_counts, probabilities1, marker='o', label='Probabilities 1', linestyle='--')
     plt.xticks(node_counts)
     plt.xlabel('Number of Nodes')
     plt.ylabel('Average % Majority')
@@ -284,28 +297,29 @@ def printSequence(sequences):
 
 def main():
     p = 0.2         # Probability
-    s = 50000      # Sequences generated
+    s = 50000       # Sequences generated
     #k = 1          # Desired index
+    proportions0 = []
+    proportions1 = []
+    proportionsE = []
     nodes = range(31,101,2)
-    
     #nodes = [30, 31, 32, 33, 34, 35, 36, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]
-    proportions = []
-    
-    # Nodes with values we know, using dictionary
-#    knownNodes = [{'index': 0, 'value': 1}, {'index': 1, 'value': 1}, {'index': 2, 'value': 0}, {'index': 5, 'value': 0}, {'index': 6, 'value': 1}]
     
     for n in nodes:
         sequences = []
-#        knownNodes = [{'index': 0, 'value': 1}, {'index': 1, 'value': 1}, {'index': 2, 'value': 1}, {'index': n-2, 'value': 0}, {'index': n-1, 'value': 0}]
-
+        
         # For every sample generated, we want there to be a new dictionary of knownNodes
         for i in range(s):
             knownNodes = randomSampling(n)
             sequence = createSequencesKnown(n, p, 1, knownNodes)
             sequences.append(sequence[0])
 
-        proportion = majorityProportion(sequences)
-        proportions.append(proportion)
+        proportion0 = more0(sequences)
+        proportions0.append(proportion0)
+        proportion1 = more1(sequences)
+        proportions1.append(proportion1)
+        proportionE = equal01(sequences)
+        proportionsE.append(proportionE)
             
 #        print(f"Sequences with {n} nodes:")
 #        print("Average number of 0's: " + str(avg0(sequences)))
@@ -314,10 +328,9 @@ def main():
 #        print("Proportion of Sequences with Equal 0's and 1's: " + str(equal01(sequences)))
 #        print("---")
 
-    plotAverageMajority(nodes, proportions)
+    plotMajority(nodes, proportions0, proportions1)
     
-    #print(estimateInBetweenSame(3, 0, .5))
-
+    
 # Run main method
 
 if __name__ == "__main__":
