@@ -282,6 +282,26 @@ def plotPr(node_counts, probabilities):
     plt.show()
 
 
+def plotMajorityStackedBar(node_counts, proportions0, proportions1, proportionsE):
+    width = 0.6
+    fig, ax = plt.subplots(figsize=(10, 6))
+    
+    ax.bar(node_counts, proportions1, width, label='Majority 1', color='tab:blue')
+    ax.bar(node_counts, proportions0, width, bottom=proportions1, label='Majority 0', color='tab:orange')
+    ax.bar(node_counts, proportionsE, width, bottom=[i+j for i,j in zip(proportions1, proportions0)], label='Equal 0 & 1', color='tab:green')
+
+    ax.set_xlabel('Number of Nodes')
+    ax.set_ylabel('Proportion of Sequences')
+    ax.set_title('Majority Proportions for Sequences with Varying Nodes')
+    ax.set_xticks(node_counts)
+    ax.set_xticklabels(node_counts)
+    ax.legend()
+
+    ax.grid(True, axis='y', linestyle='--', alpha=0.7)
+    plt.tight_layout()
+    plt.show()
+
+
 # Print for testing
 
 def printSequence(sequences):
@@ -328,7 +348,8 @@ def main():
 #        print("Proportion of Sequences with Equal 0's and 1's: " + str(equal01(sequences)))
 #        print("---")
 
-    plotMajority(nodes, proportions0, proportions1)
+    #plotMajority(nodes, proportions0, proportions1)
+    plotMajorityStackedBar(nodes, proportions0, proportions1, proportionE)
     
     
 # Run main method
