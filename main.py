@@ -95,11 +95,16 @@ def randomSampling(n):
         knownNodes.append({'index': 0, 'value': 1})
     else:
         numKnown = n // 3
-        # The number of 1's will be half or half+1 the number of knowns
-        # The number of 1's will be at least half to up to all the knowns
-        majorityCount = (numKnown // 2) + 1
-        #majorityCount = random.randint((numKnown // 2) + 1, numKnown)
-        minorityCount = numKnown - majorityCount
+        if numKnown % 2 == 0:
+            majorityCount = numKnown // 2
+            minorityCount = majorityCount - 1
+            numKnown = majorityCount + minorityCount
+        else:
+            majorityCount = numKnown // 2 + 1
+            minorityCount = numKnown - majorityCount
+        
+        #print(n, numKnown, minorityCount, majorityCount)
+        
         knownIndices = random.sample(range(n), numKnown)
 
         for index in knownIndices:
@@ -281,8 +286,9 @@ def main():
     p = 0.2         # Probability
     s = 50000      # Sequences generated
     #k = 1          # Desired index
-    nodes = range(5,30)
-    #nodes = [31, 33, 35, 37, 39, 41, 43, 45, 75, 77, 79, 81, 83, 85]
+    nodes = range(31,101,2)
+    
+    #nodes = [30, 31, 32, 33, 34, 35, 36, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]
     proportions = []
     
     # Nodes with values we know, using dictionary
