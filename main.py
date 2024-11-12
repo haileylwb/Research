@@ -322,7 +322,7 @@ def main():
     proportions0 = []
     proportions1 = []
     proportionsE = []
-    nodes = range(31,101,2)
+    nodes = range(30,101,2)
     #nodes = [30, 31, 32, 33, 34, 35, 36, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]
     
     for n in nodes:
@@ -349,7 +349,9 @@ def main():
 #        print("---")
 
     #plotMajority(nodes, proportions0, proportions1)
-    plotMajorityStackedBar(nodes, proportions0, proportions1, proportionE)
+    plotMajorityStackedBar(nodes, proportions0, proportions1, proportionsE)
+    
+    #rerun for odd and even n=30 to 100
     
     
 # Run main method
