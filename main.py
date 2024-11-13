@@ -200,11 +200,10 @@ def equal01(sequences):
     
     
 # Calculate Pr( X(x+1) = V | X(0) = V, X(k+1) = V)
-# When x = 0, we get ((1-p) * (1 + (1-2p)^k)) / (1 + (1-2p)^k)
+# 0.5 + ((1-2p)^i + (1-2p)^(k+1-i)) / (2 * (1 + (1-2p)^(k+1)))
 
-#def calculateProbInBetweenSame(k, x, p):
-#    probBothV = (1 + (1-2*p)**k)
-#    return (0.5 * ((1-2*p)**x + 1)) * probBothV / probBothV
+def calculateProbInBetweenSame(k, x, p):
+    return 0.5 + ((1-2*p)**x + (1-2*p)**(k+1-x)) / (2 * (1 + (1-2*p)**(k+1)))
 
 
 # Calculate Pr( X(x+1) = V | X(0) = V, X(k+1) = V)
@@ -216,32 +215,14 @@ def equal01(sequences):
     
 # We have node X(i) and X(i+k+1) with the SAME value V, with k nodes in-between
 # For each node, calculate the probability it has value V
-# Use the math summation thingy we found
 # The sum of the probabilities will be the estimated number of V's in-between
 # Expected # of not V = k - Expected # of V
 
-#def estimateInBetweenSame(k, v, p):
-#    expected = 0
-#    # By symmetry, we can just calculate the first half and multiply by 2
-#    end = (k // 2)
-#    for i in range(end):
-#        expected += calculateProbInBetweenSame(k, i, p)
-#    if k > 1: # If k was one then we end up double counting?
-#        expected *= 2
-#        # If there is an odd number of nodes, calculate middle node separately
-#        if (k % 2) == 1:
-#            mid = k // 2
-#            expected += calculateProbInBetweenSame(k, mid, p)
-#    return expected
-    
-
-# We have node X(i) and X(i+k+1) with the DIFFERENT VALUES, with k nodes in-between
-# For each node, calculate the probability it has value V
-# Use the math summation thingy we found
-# The sum of the probabilities will be the estimated number of V's in-between
-
-#def estimateInBetweenDIff(k, v1, v2, p):
-#    return
+def estimateInBetweenSame(k, p):
+    expected = 0
+    for i in range(1, k+1):
+        expected += calculateProbInBetweenSame(k,i,p)
+    return expected
     
     
 # Graphs the average % majority on the y-axis with n nodes on the x-axis
@@ -322,24 +303,24 @@ def main():
     proportions0 = []
     proportions1 = []
     proportionsE = []
-    nodes = range(30,101,2)
+    nodes = range(31,102,2)
     #nodes = [30, 31, 32, 33, 34, 35, 36, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]
     
-    for n in nodes:
-        sequences = []
-        
-        # For every sample generated, we want there to be a new dictionary of knownNodes
-        for i in range(s):
-            knownNodes = randomSampling(n)
-            sequence = createSequencesKnown(n, p, 1, knownNodes)
-            sequences.append(sequence[0])
-
-        proportion0 = more0(sequences)
-        proportions0.append(proportion0)
-        proportion1 = more1(sequences)
-        proportions1.append(proportion1)
-        proportionE = equal01(sequences)
-        proportionsE.append(proportionE)
+#    for n in nodes:
+#        sequences = []
+#        
+#        # For every sample generated, we want there to be a new dictionary of knownNodes
+#        for i in range(s):
+#            knownNodes = randomSampling(n)
+#            sequence = createSequencesKnown(n, p, 1, knownNodes)
+#            sequences.append(sequence[0])
+#
+#        proportion0 = more0(sequences)
+#        proportions0.append(proportion0)
+#        proportion1 = more1(sequences)
+#        proportions1.append(proportion1)
+#        proportionE = equal01(sequences)
+#        proportionsE.append(proportionE)
             
 #        print(f"Sequences with {n} nodes:")
 #        print("Average number of 0's: " + str(avg0(sequences)))
@@ -349,9 +330,9 @@ def main():
 #        print("---")
 
     #plotMajority(nodes, proportions0, proportions1)
-    plotMajorityStackedBar(nodes, proportions0, proportions1, proportionsE)
-    
-    #rerun for odd and even n=30 to 100
+    #plotMajorityStackedBar(nodes, proportions0, proportions1, proportionsE)
+    print(calculateProbInBetweenSame(1, 1, p))
+    print(estimateInBetweenSame(1,p))
     
     
 # Run main method
