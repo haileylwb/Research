@@ -1,6 +1,11 @@
 import random
 import matplotlib.pyplot as plt
 
+# -----------------------------------------------------------------------------------------------
+
+# GENERATING FUNCTIONS
+
+# -----------------------------------------------------------------------------------------------
 
 # n = k + 1 nodes
 # p = probability of flipping
@@ -72,23 +77,9 @@ def createSequencesKnown(n, p, s, known):
         sequences.append(sequence)
     return sequences
 
-    
-# Sorts sequences by same or different starting and ending nodes
 
-#def sortSequences(sequences):
-#   typeA = [] # same start and end node values
-#   typeB = [] # different start and end node values
-#
-#   for sequence in sequences:
-#       if sequence[0] == sequence[-1]:
-#           typeA.append(sequence)
-#   else:
-#       typeB.append(sequence)
-#   return typeA, typeB
-
-
-# Creates random known values for a fixed number of knowns n//3
-# Has more 1's than 0's
+# Creates random known values for a fixed number of knowns (n//3)
+# Has more 1's than 0's (difference of 1)
 def randomSampling(n):
     knownNodes = []
     if n < 3:
@@ -117,6 +108,13 @@ def randomSampling(n):
     return knownNodes
 
 
+# -----------------------------------------------------------------------------------------------
+
+# COUNTING FUNCTIONS
+
+# -----------------------------------------------------------------------------------------------
+
+
 # Calculate the proportion of the majority value in the sequences
 def majorityProportion(sequences):
     n = len(sequences)
@@ -131,6 +129,7 @@ def majorityProportion(sequences):
             majorityCount += 1
             
     return majorityCount / n
+    
     
 # k = given index
 # Calculates how many sequences satisfy x0 = xk, divided by number of sequences
@@ -169,7 +168,7 @@ def more0(sequences):
     return more0sequences / n
     
     
-# Calculates proportion of sequences that have more 0's than 1's
+# Calculates proportion of sequences that have more 1's than 0's
 
 def more1(sequences):
     n = len(sequences)
@@ -199,6 +198,13 @@ def equal01(sequences):
     return equalSequences / n
     
     
+# -----------------------------------------------------------------------------------------------
+
+# CALCULATING PROBABILITY & ESTIMATING FUNCTIONS
+
+# -----------------------------------------------------------------------------------------------
+
+    
 # Calculate Pr( X(x+1) = V | X(0) = V, X(k+1) = V)
 # 0.5 + ((1-2p)^i + (1-2p)^(k+1-i)) / (2 * (1 + (1-2p)^(k+1)))
 
@@ -206,10 +212,7 @@ def calculateProbInBetweenSame(k, x, p):
     return 0.5 + ((1-2*p)**x + (1-2*p)**(k+1-x)) / (2 * (1 + (1-2*p)**(k+1)))
     
     
-# We have node X(i) and X(i+k+1) with the SAME value V, with k nodes in-between
-# For each node, calculate the probability it has value V
-# The sum of the probabilities will be the estimated number of V's in-between
-# Expected # of not V = k - Expected # of V
+# Expected number of V in between X(i) = X(i+k+1) = V, k nodes in-between
 
 def estimateInBetweenSame(k, p):
     expected = 0
@@ -222,23 +225,27 @@ def estimateInBetweenSame(k, p):
 # 0.5 + ((1-2p)^i)/2
 
 def calculateProbRightSame(k, x, p):
-    return 0.5 + ((1-2*p)**i)/2
+    return 0.5 + ((1-2*p)**x)/2
     
-
-# We know node X(i) has value V, with k nodes after it
-# For each node, calculate the probability it has value V
-# The sum of the probabilities will be the estimated number of V's to the right of it
-# Symmetric to k nodes on it's left
-# Expected # of not V = k - Expected # of V
+    
+# Expected number of V k nodes after X(i)
 
 def estimateRightSame(k, p):
     expected = 0
     for i in range(1, k+1):
         expected += calculateProbRightSame(k,i,p)
     return expected
+    
+    
+# -----------------------------------------------------------------------------------------------
+
+# GRAPH PLOTTING FUNCTIONS
+
+# -----------------------------------------------------------------------------------------------
 
     
-# Graphs the average % majority on the y-axis with n nodes on the x-axis
+# Line Graph: Number of Nodes vs Average % Majority
+
 def plotAverageMajority(node_counts, probabilities):
     plt.plot(node_counts, probabilities, marker='o')
     plt.xticks(node_counts)
@@ -250,7 +257,8 @@ def plotAverageMajority(node_counts, probabilities):
     plt.show()
 
 
-# Graphs the % majority of 1's and 0's
+# Line Graph: Number of Nodes vs % Majority of 1's and 0's
+
 def plotMajority(node_counts, probabilities0, probabilities1):
     plt.plot(node_counts, probabilities0, marker='o', label='Probabilities 0')
     plt.plot(node_counts, probabilities1, marker='o', label='Probabilities 1', linestyle='--')
@@ -263,7 +271,7 @@ def plotMajority(node_counts, probabilities0, probabilities1):
     plt.show()
 
 
-# Graphing the probability that x0 = xk for varying number of nodes
+# Line Graph: Number of Nodes vs Probability (x0 = xk)
 
 def plotPr(node_counts, probabilities):
     plt.plot(node_counts, probabilities, marker='o')
@@ -275,6 +283,8 @@ def plotPr(node_counts, probabilities):
     plt.grid()
     plt.show()
 
+
+# Bar Graph: Number of Nodes vs Proportion of Majority of 1, 0, Equal
 
 def plotMajorityStackedBar(node_counts, proportions0, proportions1, proportionsE):
     width = 0.6
@@ -310,13 +320,13 @@ def printSequence(sequences):
 # Main method
 
 def main():
-    p = 0.2         # Probability
+    p = 0.01         # Probability
     s = 50000       # Sequences generated
     #k = 1          # Desired index
     proportions0 = []
     proportions1 = []
     proportionsE = []
-    nodes = range(31,102,2)
+    nodes = range(11,31,1)
     #nodes = [30, 31, 32, 33, 34, 35, 36, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]
     
 #    for n in nodes:
@@ -342,10 +352,11 @@ def main():
 #        print("Proportion of Sequences with Equal 0's and 1's: " + str(equal01(sequences)))
 #        print("---")
 
-    #plotMajority(nodes, proportions0, proportions1)
+#    plotMajority(nodes, proportions0, proportions1)
     #plotMajorityStackedBar(nodes, proportions0, proportions1, proportionsE)
-    print(calculateProbInBetweenSame(1, 1, p))
-    print(estimateInBetweenSame(1,p))
+    #print(calculateProbInBetweenSame(1, 1, p))
+    print(estimateInBetweenSame(10,p))
+    print(estimateRightSame(10, p))
     
     
 # Run main method
