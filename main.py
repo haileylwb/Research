@@ -94,8 +94,6 @@ def randomSampling(n):
             majorityCount = numKnown // 2 + 1
             minorityCount = numKnown - majorityCount
         
-        #print(n, numKnown, minorityCount, majorityCount)
-        
         knownIndices = random.sample(range(n), numKnown)
 
         for index in knownIndices:
@@ -236,6 +234,62 @@ def estimateRightSame(k, p):
         expected += calculateProbRightSame(k,i,p)
     return expected
     
+
+# Calculate Pr( X(x+1) = V | X(0) = V, X(k+1) = !V)
+# Calculate Pr( X(x+1) = V | X(0) = !V, X(k+1) = V)
+
+
+# Estimate the number of V's
+# p = probability
+# k = number of nodes total
+# sample = given sample
+
+def estimate(p, k, sample):
+    exp_0 = 0
+    exp_1 = 0
+    knowns = {node['index']: node['value'] for node in sample}
+    knownIndexList = list(knowns.keys())
+
+    for i in knowns.items():
+        if i == 0:
+            exp_0 +=1
+        else:
+            exp_1 += 1
+    
+    # Endpoints
+    numNodesBeforeFirstKnown = k - knownIndexList[0] - 1
+    numNodesAfterLastKnown = k - knownIndexList[-1] - 1
+    
+    if knowns[0].value == 0:
+        exp_0 += estimateRightSame(numNodesBeforeFirstKnown, p)
+    else:
+        exp_1 += estimateRightSame(numNodesBeforeFirstKnown, p)
+    if knowns[-1].value == 0:
+        exp_0 += estimateRightSame(numNodesAfterLastKnown, p)
+    else:
+        exp_1 += estimateRightSame(numNodesAfterLastKnown, p)
+        
+    # In Between
+
+    return exp_0, exp_1
+
+
+#        # Before first known
+#        for j in range(firstKnownIndex, -1, -1):
+#            if sequence[j] is None:
+#                x = sequence[j + 1]
+#                if random.random() < p:
+#                    sequence[j] = 1 - x
+#                else:
+#                    sequence[j] = x
+#        # After last known
+#        for k in range(lastKnownIndex, n):
+#            if sequence[k] is None:
+#                x = sequence[k - 1]
+#                if random.random() < p:
+#                    sequence[k] = 1 - x
+#                else:
+#                    sequence[k] = x
     
 # -----------------------------------------------------------------------------------------------
 
@@ -320,19 +374,24 @@ def printSequence(sequences):
 # Main method
 
 def main():
-    p = 0.01         # Probability
+    p = 0.01        # Probability
     s = 50000       # Sequences generated
     #k = 1          # Desired index
+    
     proportions0 = []
     proportions1 = []
     proportionsE = []
+    
     nodes = range(11,31,1)
-    #nodes = [30, 31, 32, 33, 34, 35, 36, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]
+    print(estimateInBetweenSame(10,p))
+    print(estimateRightSame(10, p))
+    
+    
+#    nodes = [30, 31, 32, 33, 34, 35, 36, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]
     
 #    for n in nodes:
 #        sequences = []
-#        
-#        # For every sample generated, we want there to be a new dictionary of knownNodes
+#
 #        for i in range(s):
 #            knownNodes = randomSampling(n)
 #            sequence = createSequencesKnown(n, p, 1, knownNodes)
@@ -353,10 +412,8 @@ def main():
 #        print("---")
 
 #    plotMajority(nodes, proportions0, proportions1)
-    #plotMajorityStackedBar(nodes, proportions0, proportions1, proportionsE)
-    #print(calculateProbInBetweenSame(1, 1, p))
-    print(estimateInBetweenSame(10,p))
-    print(estimateRightSame(10, p))
+#    plotMajorityStackedBar(nodes, proportions0, proportions1, proportionsE)
+#    print(calculateProbInBetweenSame(1, 1, p))
     
     
 # Run main method
