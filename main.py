@@ -244,52 +244,41 @@ def estimateRightSame(k, p):
 # k = number of nodes total
 # sample = given sample
 
-def estimate(p, k, sample):
+def estimate(p, k, knowns):
     exp_0 = 0
     exp_1 = 0
-    knowns = {node['index']: node['value'] for node in sample}
-    knownIndexList = list(knowns.keys())
+    
+    # Get the list of indexes (keys) sorted in ascending order
+    knownIndexList = sorted(knowns.keys())
 
-    for i in knowns.items():
-        if i == 0:
-            exp_0 +=1
+    # Count how many 0's and 1's are in the known values
+    for index, value in knowns.items():
+        if value == 0:
+            exp_0 += 1
         else:
             exp_1 += 1
     
     # Endpoints
-    numNodesBeforeFirstKnown = k - knownIndexList[0] - 1
-    numNodesAfterLastKnown = k - knownIndexList[-1] - 1
+    numNodesBeforeFirstKnown = knownIndexList[0]
+    if knownIndexList[-1] == k - 1:
+        numNodesAfterLastKnown = 0
+    else:
+        numNodesAfterLastKnown = k - knownIndexList[-1] - 1
     
-    if knowns[0].value == 0:
+    # Left of first known node
+    if knowns[knownIndexList[0]] == 0:
         exp_0 += estimateRightSame(numNodesBeforeFirstKnown, p)
     else:
         exp_1 += estimateRightSame(numNodesBeforeFirstKnown, p)
-    if knowns[-1].value == 0:
+    
+    # Right of last known node
+    if knowns[knownIndexList[-1]] == 0:
         exp_0 += estimateRightSame(numNodesAfterLastKnown, p)
     else:
         exp_1 += estimateRightSame(numNodesAfterLastKnown, p)
         
-    # In Between
-
     return exp_0, exp_1
-
-
-#        # Before first known
-#        for j in range(firstKnownIndex, -1, -1):
-#            if sequence[j] is None:
-#                x = sequence[j + 1]
-#                if random.random() < p:
-#                    sequence[j] = 1 - x
-#                else:
-#                    sequence[j] = x
-#        # After last known
-#        for k in range(lastKnownIndex, n):
-#            if sequence[k] is None:
-#                x = sequence[k - 1]
-#                if random.random() < p:
-#                    sequence[k] = 1 - x
-#                else:
-#                    sequence[k] = x
+    
     
 # -----------------------------------------------------------------------------------------------
 
@@ -383,8 +372,8 @@ def main():
     proportionsE = []
     
     nodes = range(11,31,1)
-    print(estimateInBetweenSame(10,p))
-    print(estimateRightSame(10, p))
+    knownNodesExample = {0:1, 2:0}
+    print(estimate(p, 3, knownNodesExample))
     
     
 #    nodes = [30, 31, 32, 33, 34, 35, 36, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]
