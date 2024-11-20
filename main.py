@@ -239,7 +239,7 @@ def estimateRightSame(k, p):
 # Calculate Pr( X(x+1) = V | X(0) = !V, X(k+1) = V)
 
 
-# Estimate the number of V's
+# Estimate the number of V's given a sample
 # p = probability
 # k = number of nodes total
 # sample = given sample
@@ -277,8 +277,60 @@ def estimate(p, k, knowns):
     else:
         exp_1 += estimateRightSame(numNodesAfterLastKnown, p)
         
+    # In between nodes
+    # TO DO
+    
     return exp_0, exp_1
     
+
+# Calculates majority in a sequence
+# Dictionary implementation
+
+def majorityValueDictionary(known):
+    count0 = 0
+    count1 = 0
+    majorityValue = 0
+    knowns = {node['index']: node['value'] for node in known}
+    valuesList = list(knowns.values())
+    for i in valuesList:
+        if i == 0:
+            count0 += 1
+        else:
+            count1 += 1
+    if count1 > count0:
+        majorityValue += 1
+    return majorityValue
+    
+    
+# List implementation
+def majorityValueList(known):
+    count0 = 0
+    count1 = 0
+    majorityValue = 0
+    for i in known:
+        if i == 0:
+            count0 += 1
+        else:
+            count1 += 1
+    if count1 > count0:
+        majorityValue += 1
+    return majorityValue
+    
+    
+# Calculate Pr(Majority = Majority in Sample)
+def majorityWorks(n, p, s, sample):
+    sampleMajorityValue = majorityValueDictionary(sample)
+    match = 0
+    
+    # Generate sequences based off the samples
+    sequences = createSequencesKnown(n, p, s, sample)
+    for sequence in sequences:
+        seqMajorityValue = majorityValueList(sequence)
+        if sampleMajorityValue == seqMajorityValue:
+            match += 1
+    
+    return match / s
+        
     
 # -----------------------------------------------------------------------------------------------
 
@@ -363,17 +415,38 @@ def printSequence(sequences):
 # Main method
 
 def main():
-    p = 0.01        # Probability
-    s = 50000       # Sequences generated
-    #k = 1          # Desired index
+    # Generate 1 million sequences
+    s = 1000000
     
+    # Probabilities
+    prob = [0.01, 0.05, 0.1, 0.25, 0.5]
+    
+    # Nodes
+    nodes = range(11,31,1)
+    
+    # Proportions List
     proportions0 = []
     proportions1 = []
     proportionsE = []
     
-    nodes = range(11,31,1)
-    knownNodesExample = {0:1, 2:0}
-    print(estimate(p, 3, knownNodesExample))
+    # Knowns
+    knowns = [
+    [{'index': 1, 'value': 0}, {'index': 2, 'value': 0}, {'index': 3, 'value': 0}],
+    [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}],
+    [{'index': 2, 'value': 0}, {'index': 5, 'value': 0}, {'index': 8, 'value': 0}],
+    [{'index': 2, 'value': 0}, {'index': 4, 'value': 0}, {'index': 6, 'value': 0}]
+    ]
+    
+    # Sample and majority works
+    for p in prob:
+        print("-----")
+        print(p)
+        for known in knowns:
+            print(known)
+            print(majorityWorks(9, p, s, known))
+            print("--")
+        
+#    print(estimate(p, 3, knownNodesExample))
     
     
 #    nodes = [30, 31, 32, 33, 34, 35, 36, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]
