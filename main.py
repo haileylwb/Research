@@ -269,6 +269,9 @@ def estimate(p, k, knowns):
             else:
                 exp_0 += (numNodesAfterLastKnown - estimateRightSame(numNodesAfterLastKnown, p))
     
+    # in betweens
+
+
     exp_1 = k - exp_0
     
     return exp_0, exp_1
@@ -427,10 +430,10 @@ def main():
     [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}]
     ]
     
+    exmple = [{'index': 0, 'value': 0}, {'index': 2, 'value': 0}]
+    
     # Estimation
-    yes = randomSampling(9)
-    print(yes)
-    print(estimate(.2, 9, yes))
+    print(estimate(.2, 3, exmple))
     
     # Sample and majority works
 #    for p in prob:
