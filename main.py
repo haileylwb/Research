@@ -226,7 +226,7 @@ def calculateProbRightSame(k, x, p):
     return 0.5 + ((1-2*p)**x)/2
     
     
-# Expected number of V k nodes after X(i)
+# Expected number of V's, k nodes after X(i)
 
 def estimateRightSame(k, p):
     expected = 0
@@ -248,40 +248,31 @@ def estimate(p, k, knowns):
     exp_0 = 0
     exp_1 = 0
     
-    # Get the list of indexes (keys) sorted in ascending order
-    knownIndexList = sorted(knowns.keys())
+    knownsDict = {node['index']: node['value'] for node in knowns}
+    
+    knownIndexList = sorted(knownsDict.keys())
+    
+    exp_0 += sum(1 for value in knownsDict.values() if value == 0)
 
-    # Count how many 0's and 1's are in the known values
-    for index, value in knowns.items():
-        if value == 0:
-            exp_0 += 1
+    if knownIndexList:
+        firstKnownIndex = knownIndexList[0]
+        if knownsDict[firstKnownIndex] == 0:
+            exp_0 += estimateRightSame(firstKnownIndex, p)
         else:
-            exp_1 += 1
+            exp_0 += firstKnownIndex - estimateRightSame(firstKnownIndex, p)
+
+        lastKnownIndex = knownIndexList[-1]
+        if lastKnownIndex < k - 1:
+            numNodesAfterLastKnown = k - lastKnownIndex - 1
+            if knownsDict[lastKnownIndex] == 0:
+                exp_0 += estimateRightSame(numNodesAfterLastKnown, p)
+            else:
+                exp_0 += (numNodesAfterLastKnown - estimateRightSame(numNodesAfterLastKnown, p))
     
-    # Endpoints
-    numNodesBeforeFirstKnown = knownIndexList[0]
-    if knownIndexList[-1] == k - 1:
-        numNodesAfterLastKnown = 0
-    else:
-        numNodesAfterLastKnown = k - knownIndexList[-1] - 1
-    
-    # Left of first known node
-    if knowns[knownIndexList[0]] == 0:
-        exp_0 += estimateRightSame(numNodesBeforeFirstKnown, p)
-    else:
-        exp_1 += estimateRightSame(numNodesBeforeFirstKnown, p)
-    
-    # Right of last known node
-    if knowns[knownIndexList[-1]] == 0:
-        exp_0 += estimateRightSame(numNodesAfterLastKnown, p)
-    else:
-        exp_1 += estimateRightSame(numNodesAfterLastKnown, p)
-        
-    # In between nodes
-    # TO DO
+    exp_1 = k - exp_0
     
     return exp_0, exp_1
-    
+
 
 # Calculates majority in a sequence
 # Dictionary implementation
@@ -303,6 +294,7 @@ def majorityValueDictionary(known):
     
     
 # List implementation
+
 def majorityValueList(known):
     count0 = 0
     count1 = 0
@@ -432,32 +424,21 @@ def main():
     # Knowns
     knowns = [
     [{'index': 1, 'value': 0}, {'index': 2, 'value': 0}, {'index': 3, 'value': 0}],
-    [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}],
-    [{'index': 2, 'value': 0}, {'index': 5, 'value': 0}, {'index': 8, 'value': 0}],
-    [{'index': 2, 'value': 0}, {'index': 4, 'value': 0}, {'index': 6, 'value': 0}],
-    [{'index': 1, 'value': 1}, {'index': 2, 'value': 0}, {'index': 3, 'value': 0}],
-    [{'index': 3, 'value': 1}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}],
-    [{'index': 2, 'value': 1}, {'index': 5, 'value': 0}, {'index': 8, 'value': 0}],
-    [{'index': 2, 'value': 1}, {'index': 4, 'value': 0}, {'index': 6, 'value': 0}],
-    [{'index': 1, 'value': 0}, {'index': 2, 'value': 1}, {'index': 3, 'value': 0}],
-    [{'index': 3, 'value': 0}, {'index': 5, 'value': 1}, {'index': 7, 'value': 0}],
-    [{'index': 2, 'value': 0}, {'index': 5, 'value': 1}, {'index': 8, 'value': 0}],
-    [{'index': 2, 'value': 0}, {'index': 4, 'value': 1}, {'index': 6, 'value': 0}],
-    [{'index': 1, 'value': 0}, {'index': 2, 'value': 0}, {'index': 3, 'value': 1}],
-    [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 1}],
-    [{'index': 2, 'value': 0}, {'index': 5, 'value': 0}, {'index': 8, 'value': 1}],
-    [{'index': 2, 'value': 0}, {'index': 4, 'value': 0}, {'index': 6, 'value': 1}]
+    [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}]
     ]
     
+    # Estimation
+    yes = randomSampling(9)
+    print(yes)
+    print(estimate(.2, 9, yes))
+    
     # Sample and majority works
-    for p in prob:
-        print("-----")
-        print(p)
-        for known in knowns:
-            print(known)
-            print(avg0(known))
-            print(majorityWorks(9, p, s, known))
-            print("--")
+#    for p in prob:
+#        print(p)
+#        for known in knowns:
+#            createSequences(9, p, s)
+            
+
         
 #    print(estimate(p, 3, knownNodesExample))
     
