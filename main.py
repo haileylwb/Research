@@ -236,8 +236,11 @@ def estimateRightSame(k, p):
     
 
 # Calculate Pr( X(x+1) = V | X(0) = V, X(k+1) = !V)
-# Calculate Pr( X(x+1) = V | X(0) = !V, X(k+1) = V)
+# 0.5 + ((1-2p)^i - (1-2p)^(k+1-i)) / (2 * (1 - (1-2p)^(k+1)))
 
+def calculateProbInBetweenDiff(k, x, p):
+    return 0.5 + ((1-2*p)**x - (1-2*p)**(k+1-x))/ (2 * (1 - (1 - 2*p)**(k+1)))
+    
 
 # Estimate the number of V's given a sample
 # p = probability
