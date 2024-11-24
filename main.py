@@ -434,7 +434,19 @@ def main():
     [{'index': 1, 'value': 0}, {'index': 2, 'value': 0}, {'index': 3, 'value': 0}],
     [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}],
     [{'index': 2, 'value': 0}, {'index': 5, 'value': 0}, {'index': 8, 'value': 0}],
-    [{'index': 2, 'value': 0}, {'index': 4, 'value': 0}, {'index': 6, 'value': 0}]
+    [{'index': 2, 'value': 0}, {'index': 4, 'value': 0}, {'index': 6, 'value': 0}],
+    [{'index': 1, 'value': 1}, {'index': 2, 'value': 0}, {'index': 3, 'value': 0}],
+    [{'index': 3, 'value': 1}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}],
+    [{'index': 2, 'value': 1}, {'index': 5, 'value': 0}, {'index': 8, 'value': 0}],
+    [{'index': 2, 'value': 1}, {'index': 4, 'value': 0}, {'index': 6, 'value': 0}],
+    [{'index': 1, 'value': 0}, {'index': 2, 'value': 1}, {'index': 3, 'value': 0}],
+    [{'index': 3, 'value': 0}, {'index': 5, 'value': 1}, {'index': 7, 'value': 0}],
+    [{'index': 2, 'value': 0}, {'index': 5, 'value': 1}, {'index': 8, 'value': 0}],
+    [{'index': 2, 'value': 0}, {'index': 4, 'value': 1}, {'index': 6, 'value': 0}],
+    [{'index': 1, 'value': 0}, {'index': 2, 'value': 0}, {'index': 3, 'value': 1}],
+    [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 1}],
+    [{'index': 2, 'value': 0}, {'index': 5, 'value': 0}, {'index': 8, 'value': 1}],
+    [{'index': 2, 'value': 0}, {'index': 4, 'value': 0}, {'index': 6, 'value': 1}]
     ]
     
     # Sample and majority works
@@ -443,6 +455,7 @@ def main():
         print(p)
         for known in knowns:
             print(known)
+            print(avg0(known))
             print(majorityWorks(9, p, s, known))
             print("--")
         
