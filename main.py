@@ -281,7 +281,7 @@ def estimate(p, k, knowns):
             else:
                 exp_0 += (numNodesAfterLastKnown - estimateRightSame(numNodesAfterLastKnown, p))
     
-    # in betweens
+    # In Betweens
     for m in range(len(knownIndexList) - 1):
         startIndex = knownIndexList[m]
         endIndex = knownIndexList[m + 1]
@@ -302,7 +302,7 @@ def estimate(p, k, knowns):
     return exp_0, exp_1
 
 
-# Calculates majority in a sequence
+# Calculates majority value in a sequence
 # Dictionary implementation
 
 def majorityValueDictionary(known):
@@ -336,21 +336,29 @@ def majorityValueList(known):
         majorityValue += 1
     return majorityValue
     
-    
+
+# Checks if sequences match sample
+
+def matchSample(sequences, sample):
+    matchedSeq = []
+    indexList = list(sample[0].keys())
+    for sequence in sequences:
+        match = True
+        for i in indexList:
+            if sample[0][i] != sequence.get(i, None):
+                match = False
+                break
+        if match:
+            matchedSeq.append[sequence]
+    return matchedSeq
+
+
 # Calculate Pr(Majority = Majority in Sample)
 
 def majorityWorks(n, p, s, sample):
-    sampleMajorityValue = majorityValueDictionary(sample)
-    match = 0
     
-    # Generate sequences based off the samples
-    sequences = createSequencesKnown(n, p, s, sample)
-    for sequence in sequences:
-        seqMajorityValue = majorityValueList(sequence)
-        if sampleMajorityValue == seqMajorityValue:
-            match += 1
     
-    return match / s
+    return
         
     
 # -----------------------------------------------------------------------------------------------
@@ -465,7 +473,7 @@ def main():
 #    for p in prob:
 #        print(p)
 #        for known in knowns:
-#            createSequences(9, p, s)    
+#            createSequences(9, p, s)
     
 #    nodes = [30, 31, 32, 33, 34, 35, 36, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]
     
