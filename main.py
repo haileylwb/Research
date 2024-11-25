@@ -355,10 +355,22 @@ def matchSample(sequences, sample):
 
 # Calculate Pr(Majority = Majority in Sample)
 
-def majorityWorks(n, p, s, sample):
-    
-    
-    return
+def majorityWorks(n, p, s, samples):
+    sum = 0
+    for sample in samples:
+        # do all this
+#    Generate 1000000 sequences first
+
+#    Get sequences that matches the sample
+#    matchedSeq = matchSample()
+
+#    Calculate majority value on s
+#    Calulate majority value on G
+
+#    prMajority =
+    prSample = len(matchedSeq) / 1000000
+        sum += prMajority * prSample
+    return sum
         
     
 # -----------------------------------------------------------------------------------------------
