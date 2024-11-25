@@ -242,6 +242,15 @@ def calculateProbInBetweenDiff(k, x, p):
     return 0.5 + ((1-2*p)**x - (1-2*p)**(k+1-x))/ (2 * (1 - (1 - 2*p)**(k+1)))
     
 
+# Expected number of V's in k nodes between X(0) = V and X(k+1) = !V
+
+def estimateInBetweenDiff(k,p):
+    expected = 0
+    for i in range(1, k+1):
+        expected += calculateProbInBetweenDiff(k,i,p)
+    return expected
+    
+
 # Estimate the number of V's given a sample
 # p = probability
 # k = number of nodes total
@@ -273,7 +282,20 @@ def estimate(p, k, knowns):
                 exp_0 += (numNodesAfterLastKnown - estimateRightSame(numNodesAfterLastKnown, p))
     
     # in betweens
+    for m in range(len(knownIndexList) - 1):
+        startIndex = knownIndexList[m]
+        endIndex = knownIndexList[m + 1]
+        nodesInBetween = endIndex - startIndex - 1
 
+        startValue = knownsDict[startIndex]
+        endValue = knownsDict[endIndex]
+        
+        if startValue == 0 and endValue == 0: # 0 ... 0
+            exp_0 += estimateInBetweenSame(nodesInBetween, p)
+        elif startValue == 1 and endValue == 1: # 1 ... 1
+            exp_0 += nodesInBetween - estimateInBetweenSame(nodesInBetween, p)
+        else: # 0 ... 1 or 1 ... 0
+            exp_0 += estimateInBetweenDiff(nodesInBetween, p)
 
     exp_1 = k - exp_0
     
@@ -316,6 +338,7 @@ def majorityValueList(known):
     
     
 # Calculate Pr(Majority = Majority in Sample)
+
 def majorityWorks(n, p, s, sample):
     sampleMajorityValue = majorityValueDictionary(sample)
     match = 0
@@ -433,21 +456,16 @@ def main():
     [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}]
     ]
     
-    exmple = [{'index': 0, 'value': 0}, {'index': 2, 'value': 0}]
+    exmple = [{'index': 0, 'value': 0}, {'index': 1, 'value': 0}, {'index': 2, 'value': 0}]
     
     # Estimation
-    print(estimate(.2, 3, exmple))
+    print(estimate(.2, 9, exmple))
     
     # Sample and majority works
 #    for p in prob:
 #        print(p)
 #        for known in knowns:
-#            createSequences(9, p, s)
-            
-
-        
-#    print(estimate(p, 3, knownNodesExample))
-    
+#            createSequences(9, p, s)    
     
 #    nodes = [30, 31, 32, 33, 34, 35, 36, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]
     
