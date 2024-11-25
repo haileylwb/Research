@@ -341,15 +341,15 @@ def majorityValueList(known):
 
 def matchSample(sequences, sample):
     matchedSeq = []
-    indexList = list(sample[0].keys())
+    indexList = [item['index'] for item in sample]
+    match = True
     for sequence in sequences:
-        match = True
-        for i in indexList:
-            if sample[0][i] != sequence[i]:
+        for i in range(len(indexList)):
+            if sequence[indexList[i]] != sample[i]["index"]:
                 match = False
                 break
         if match:
-            matchedSeq.append(sequence)
+            matchedSeq.append[sequence]
     return matchedSeq
 
 
@@ -358,11 +358,11 @@ def matchSample(sequences, sample):
 def majorityWorks(n, p, s, samples):
     sum = 0
     for sample in samples:
+        majS = majorityValueDictionary(sample)
         majorityMatch = 0
         sequences = createSequences(n, p, s)
-        matches = matchSample(sequences, sample)
         
-        majS = majorityValueDictionary(sample)
+        matches = matchSample(sequences, sample)
         for match in matches:
             majG = majorityValueDictionary(match)
             if majS == majG:
