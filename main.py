@@ -345,11 +345,11 @@ def matchSample(sequences, sample):
     match = True
     for sequence in sequences:
         for i in range(len(indexList)):
-            if sequence[indexList[i]] != sample[i]["index"]:
+            if sequence[indexList[i]] != sample[i]["value"]:
                 match = False
                 break
         if match:
-            matchedSeq.append[sequence]
+            matchedSeq.append(sequence)
     return matchedSeq
 
 
@@ -458,7 +458,7 @@ def printSequence(sequences):
 
 def main():
     # Generate 1 million sequences
-    s = 1000000
+    s = 1#000000
     
     # Probabilities
     prob = [0.01, 0.05, 0.1, 0.25, 0.5]
