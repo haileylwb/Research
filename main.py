@@ -342,8 +342,8 @@ def majorityValueList(known):
 def matchSample(sequences, sample):
     matchedSeq = []
     indexList = [item['index'] for item in sample]
-    match = True
     for sequence in sequences:
+        match = True
         for i in range(len(indexList)):
             if sequence[indexList[i]] != sample[i]["value"]:
                 match = False
@@ -357,22 +357,28 @@ def matchSample(sequences, sample):
 
 def majorityWorks(n, p, s, samples):
     sum = 0
+    
     for sample in samples:
         majS = majorityValueDictionary(sample)
         majorityMatch = 0
         sequences = createSequences(n, p, s)
         
         matches = matchSample(sequences, sample)
+        
         for match in matches:
-            majG = majorityValueDictionary(match)
+            majG = majorityValueList(match)
             if majS == majG:
                 majorityMatch += 1
 
-        prMajority = majorityMatch / len(matches)
-        prSample = len(matches) / 1000000
+        if len(matches) == 0:
+            prMajority = 0
+            prSample = 0
+        else:
+            prMajority = majorityMatch / len(matches)
+            prSample = len(matches) / s
         sum += prMajority * prSample
     return sum
-        
+    
     
 # -----------------------------------------------------------------------------------------------
 
@@ -458,7 +464,7 @@ def printSequence(sequences):
 
 def main():
     # Generate 1 million sequences
-    s = 1#000000
+    s = 1000000
     
     # Probabilities
     prob = [0.01, 0.05, 0.1, 0.25, 0.5]
@@ -474,16 +480,15 @@ def main():
     # Knowns
     knowns = [
     [{'index': 1, 'value': 0}, {'index': 2, 'value': 0}, {'index': 3, 'value': 0}],
-    [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}]
+    [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}],
+    [{'index': 2, 'value': 0}, {'index': 5, 'value': 0}, {'index': 8, 'value': 0}],
+    [{'index': 2, 'value': 0}, {'index': 4, 'value': 0}, {'index': 6, 'value': 0}]
     ]
     
-    exmple = [{'index': 0, 'value': 0}, {'index': 1, 'value': 0}, {'index': 2, 'value': 0}]
-    
-    # Estimation
-#    print(estimate(.2, 9, exmple))
-    
     # Sample and majority works
-    print(majorityWorks(9, .2, s, knowns))
+    for p in prob:
+        result = majorityWorks(9, p, s, knowns)
+        print(f"With probability {p}, Pr(Maj G = Maj S) = {result}")
 
     
 #    for n in nodes:
