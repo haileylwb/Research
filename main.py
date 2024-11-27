@@ -27,7 +27,7 @@ def createSequences(n, p, s):
 
 
 # n = number of nodes
-# p = probability of flipping
+# p = probability of flippinga
 # s = number of sequences
 # Create sequences given known values and indices
 
