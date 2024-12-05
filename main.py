@@ -356,7 +356,7 @@ def matchSample(sequences, sample):
 # Calculate Pr(Majority = Majority in Sample)
 
 def majorityWorks(n, p, s, samples):
-    sum = 0
+    sum = []
     
     for sample in samples:
         majS = majorityValueDictionary(sample)
@@ -376,7 +376,8 @@ def majorityWorks(n, p, s, samples):
         else:
             prMajority = majorityMatch / len(matches)
             prSample = len(matches) / s
-        sum += prMajority * prSample
+        sum.append(prMajority)
+        print(majorityMatch)
     return sum
     
     
@@ -487,7 +488,7 @@ def main():
     
     # Sample and majority works
     for p in prob:
-        result = majorityWorks(9, p, s, knowns)
+        result = majorityWorks(15, p, s, knowns)
         print(f"With probability {p}, Pr(Maj G = Maj S) = {result}")
 
     
