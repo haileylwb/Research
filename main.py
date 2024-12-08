@@ -376,13 +376,13 @@ def majorityWorks(n, p, s, samples):
             prMajority = majorityMatch / len(matches)
 
         sum.append(prMajority)
-        print(f"{majorityMatch} matched sequences")
+#        print(f"{majorityMatch} matched sequences")
     return sum
     
     
 # -----------------------------------------------------------------------------------------------
 
-# GRAPH PLOTTING FUNCTIONS
+# GRAPHING FUNCTIONS
 
 # -----------------------------------------------------------------------------------------------
 
@@ -449,6 +449,26 @@ def plotMajorityStackedBar(node_counts, proportions0, proportions1, proportionsE
     plt.show()
 
 
+# Graph p vs P(G = S | S)
+
+def plotMajorityWorksVsProbability(probabilities, s, knowns):
+    plt.figure(figsize=(10, 6))
+    majority_proportions = []
+
+    for p in probabilities:
+        result = majorityWorks(11, p, s, knowns)
+        majority_proportions.append(result)
+        
+    plt.plot(probabilities, majority_proportions, marker='o')
+
+    # Customize the plot
+    plt.xlabel('Probability (p)')
+    plt.ylabel('Pr(Maj G = Maj S)')
+    plt.title('P vs Pr(Maj G = Maj S | S)')
+    plt.grid(True)
+    plt.show()
+
+
 # Print for testing
 
 def printSequence(sequences):
@@ -467,58 +487,48 @@ def main():
     s = 1000000
     
     # Probabilities
-    prob = [0.01, 0.05, 0.1, 0.25, 0.5]
+    prob = [0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5]
     
     # Nodes
     nodes = range(11,31,1)
     
-    # Proportions List
-    proportions0 = []
-    proportions1 = []
-    proportionsE = []
-    
     # Knowns
+    # Not very efficient way of coding this ..
     knowns = [
-    [{'index': 1, 'value': 0}, {'index': 2, 'value': 0}, {'index': 3, 'value': 0}],
-    [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}],
-    [{'index': 2, 'value': 0}, {'index': 5, 'value': 0}, {'index': 8, 'value': 0}],
-    [{'index': 2, 'value': 0}, {'index': 4, 'value': 0}, {'index': 6, 'value': 0}]
+    [{'index': 0, 'value': 0}, {'index': 1, 'value': 0}, {'index': 2, 'value': 0}],
+    [{'index': 0, 'value': 0}, {'index': 1, 'value': 0}, {'index': 2, 'value': 1}],
+    [{'index': 0, 'value': 0}, {'index': 1, 'value': 1}, {'index': 2, 'value': 0}],
+    [{'index': 0, 'value': 1}, {'index': 1, 'value': 0}, {'index': 2, 'value': 0}]
     ]
+    knowns2 = [
+    [{'index': 3, 'value': 0}, {'index': 6, 'value': 0}, {'index': 9, 'value': 0}],
+    [{'index': 3, 'value': 0}, {'index': 6, 'value': 0}, {'index': 9, 'value': 1}],
+    [{'index': 3, 'value': 0}, {'index': 6, 'value': 1}, {'index': 9, 'value': 0}],
+    [{'index': 3, 'value': 1}, {'index': 6, 'value': 0}, {'index': 9, 'value': 0}]
+    ]
+    knowns3 = [
+    [{'index': 4, 'value': 0}, {'index': 6, 'value': 0}, {'index': 8, 'value': 0}],
+    [{'index': 4, 'value': 0}, {'index': 6, 'value': 0}, {'index': 8, 'value': 1}],
+    [{'index': 4, 'value': 0}, {'index': 6, 'value': 1}, {'index': 8, 'value': 0}],
+    [{'index': 4, 'value': 1}, {'index': 6, 'value': 0}, {'index': 8, 'value': 0}],
+    ]
+    knowns4 = [
+    [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}],
+    [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 1}],
+    [{'index': 3, 'value': 0}, {'index': 5, 'value': 1}, {'index': 7, 'value': 0}],
+    [{'index': 3, 'value': 1}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}]
+    ]
+    known_sets = [knowns2, knowns3, knowns4]
     
     # Sample and majority works
-    for p in prob:
-        result = majorityWorks(15, p, s, knowns)
-        print(f"With probability {p}, Pr(Maj G = Maj S) = \n{result}\n")
+    for known in known_sets:
+        plotMajorityWorksVsProbability(prob, s, known)
+#        result = majorityWorks(11, p, s, knowns)
+#        print(f"With probability {p}, Pr(Maj G = Maj S) = \n{result}\n")
 
-    
-#    for n in nodes:
-#        sequences = []
-#
-#        for i in range(s):
-#            knownNodes = randomSampling(n)
-#            sequence = createSequencesKnown(n, p, 1, knownNodes)
-#            sequences.append(sequence[0])
-#
-#        proportion0 = more0(sequences)
-#        proportions0.append(proportion0)
-#        proportion1 = more1(sequences)
-#        proportions1.append(proportion1)
-#        proportionE = equal01(sequences)
-#        proportionsE.append(proportionE)
-            
-#        print(f"Sequences with {n} nodes:")
-#        print("Average number of 0's: " + str(avg0(sequences)))
-#        print("Proportion of Sequences with More 0's: " + str(more0(sequences)))
-#        print("Proportion of Sequences with More 1's: " + str(more1(sequences)))
-#        print("Proportion of Sequences with Equal 0's and 1's: " + str(equal01(sequences)))
-#        print("---")
 
-#    plotMajority(nodes, proportions0, proportions1)
-#    plotMajorityStackedBar(nodes, proportions0, proportions1, proportionsE)
-#    print(calculateProbInBetweenSame(1, 1, p))
-    
-    
 # Run main method
 
 if __name__ == "__main__":
     main()
+
