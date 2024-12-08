@@ -372,12 +372,11 @@ def majorityWorks(n, p, s, samples):
 
         if len(matches) == 0:
             prMajority = 0
-            prSample = 0
         else:
             prMajority = majorityMatch / len(matches)
-            prSample = len(matches) / s
+
         sum.append(prMajority)
-        print(majorityMatch)
+        print(f"{majorityMatch} matched sequences")
     return sum
     
     
@@ -489,7 +488,7 @@ def main():
     # Sample and majority works
     for p in prob:
         result = majorityWorks(15, p, s, knowns)
-        print(f"With probability {p}, Pr(Maj G = Maj S) = {result}")
+        print(f"With probability {p}, Pr(Maj G = Maj S) = \n{result}\n")
 
     
 #    for n in nodes:
