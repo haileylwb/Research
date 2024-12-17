@@ -1,5 +1,6 @@
 import random
 import matplotlib.pyplot as plt
+import numpy as np
 
 # -----------------------------------------------------------------------------------------------
 
@@ -461,11 +462,14 @@ def plotMajorityWorksVsProbability(probabilities, s, knowns):
         
     plt.plot(probabilities, majority_proportions, marker='o')
 
-    # Customize the plot
     plt.xlabel('Probability (p)')
     plt.ylabel('Pr(Maj G = Maj S)')
     plt.title('P vs Pr(Maj G = Maj S | S)')
     plt.grid(True)
+    
+    plt.ylim(0, 1)
+    plt.yticks([i * 0.1 for i in range(11)])
+    
     plt.show()
 
 
@@ -483,46 +487,71 @@ def printSequence(sequences):
 # Main method
 
 def main():
-    # Generate 1 million sequences
+    # Generate 10^6 sequences
     s = 1000000
     
     # Probabilities
-    prob = [0.01, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5]
+    prob = np.arange(0.01, 0.51, 0.01).tolist()
     
     # Nodes
     nodes = range(11,31,1)
     
     # Knowns
     # Not very efficient way of coding this ..
-    knowns = [
-    [{'index': 0, 'value': 0}, {'index': 1, 'value': 0}, {'index': 2, 'value': 0}],
-    [{'index': 0, 'value': 0}, {'index': 1, 'value': 0}, {'index': 2, 'value': 1}],
-    [{'index': 0, 'value': 0}, {'index': 1, 'value': 1}, {'index': 2, 'value': 0}],
-    [{'index': 0, 'value': 1}, {'index': 1, 'value': 0}, {'index': 2, 'value': 0}]
+    # Sorted by locations
+    knowns = [ # Locations: 0 1 2
+        [{'index': 0, 'value': 0}, {'index': 1, 'value': 0}, {'index': 2, 'value': 0}],
+        [{'index': 0, 'value': 0}, {'index': 1, 'value': 0}, {'index': 2, 'value': 1}],
+        [{'index': 0, 'value': 0}, {'index': 1, 'value': 1}, {'index': 2, 'value': 0}],
+        [{'index': 0, 'value': 1}, {'index': 1, 'value': 0}, {'index': 2, 'value': 0}]
     ]
-    knowns2 = [
-    [{'index': 3, 'value': 0}, {'index': 6, 'value': 0}, {'index': 9, 'value': 0}],
-    [{'index': 3, 'value': 0}, {'index': 6, 'value': 0}, {'index': 9, 'value': 1}],
-    [{'index': 3, 'value': 0}, {'index': 6, 'value': 1}, {'index': 9, 'value': 0}],
-    [{'index': 3, 'value': 1}, {'index': 6, 'value': 0}, {'index': 9, 'value': 0}]
+    knowns2 = [ # Locations: 3 6 9
+        [{'index': 3, 'value': 0}, {'index': 6, 'value': 0}, {'index': 9, 'value': 0}],
+        [{'index': 3, 'value': 0}, {'index': 6, 'value': 0}, {'index': 9, 'value': 1}],
+        [{'index': 3, 'value': 0}, {'index': 6, 'value': 1}, {'index': 9, 'value': 0}],
+        [{'index': 3, 'value': 1}, {'index': 6, 'value': 0}, {'index': 9, 'value': 0}]
     ]
-    knowns3 = [
-    [{'index': 4, 'value': 0}, {'index': 6, 'value': 0}, {'index': 8, 'value': 0}],
-    [{'index': 4, 'value': 0}, {'index': 6, 'value': 0}, {'index': 8, 'value': 1}],
-    [{'index': 4, 'value': 0}, {'index': 6, 'value': 1}, {'index': 8, 'value': 0}],
-    [{'index': 4, 'value': 1}, {'index': 6, 'value': 0}, {'index': 8, 'value': 0}],
+    knowns3 = [ # Locations: 4 6 8
+        [{'index': 4, 'value': 0}, {'index': 6, 'value': 0}, {'index': 8, 'value': 0}],
+        [{'index': 4, 'value': 0}, {'index': 6, 'value': 0}, {'index': 8, 'value': 1}],
+        [{'index': 4, 'value': 0}, {'index': 6, 'value': 1}, {'index': 8, 'value': 0}],
+        [{'index': 4, 'value': 1}, {'index': 6, 'value': 0}, {'index': 8, 'value': 0}]
     ]
-    knowns4 = [
-    [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}],
-    [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 1}],
-    [{'index': 3, 'value': 0}, {'index': 5, 'value': 1}, {'index': 7, 'value': 0}],
-    [{'index': 3, 'value': 1}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}]
+    knowns4 = [ # Locations: 3 3 7
+        [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}],
+        [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 1}],
+        [{'index': 3, 'value': 0}, {'index': 5, 'value': 1}, {'index': 7, 'value': 0}],
+        [{'index': 3, 'value': 1}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}]
     ]
-    known_sets = [knowns2, knowns3, knowns4]
+    
+    # Sorted by values
+    knowns5 = [ # Values: 0 0 0
+        [{'index': 0, 'value': 0}, {'index': 1, 'value': 0}, {'index': 2, 'value': 0}],
+        [{'index': 3, 'value': 0}, {'index': 6, 'value': 0}, {'index': 9, 'value': 0}],
+        [{'index': 4, 'value': 0}, {'index': 6, 'value': 0}, {'index': 8, 'value': 0}],
+        [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}]
+    ]
+    knowns6 = [ # Values: 0 0 1
+        [{'index': 0, 'value': 0}, {'index': 1, 'value': 0}, {'index': 2, 'value': 1}],
+        [{'index': 3, 'value': 0}, {'index': 6, 'value': 0}, {'index': 9, 'value': 1}],
+        [{'index': 4, 'value': 0}, {'index': 6, 'value': 0}, {'index': 8, 'value': 1}],
+        [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 1}]
+    ]
+    knowns7 = [ # Values: 0 1 0
+        [{'index': 0, 'value': 0}, {'index': 1, 'value': 1}, {'index': 2, 'value': 0}],
+        [{'index': 3, 'value': 0}, {'index': 6, 'value': 1}, {'index': 9, 'value': 0}],
+        [{'index': 4, 'value': 0}, {'index': 6, 'value': 1}, {'index': 8, 'value': 0}],
+        [{'index': 3, 'value': 0}, {'index': 5, 'value': 1}, {'index': 7, 'value': 0}]
+    ]
+    knowns8 = [ # Values: 1 0 0
+        [{'index': 0, 'value': 1}, {'index': 1, 'value': 0}, {'index': 2, 'value': 0}],
+        [{'index': 3, 'value': 1}, {'index': 6, 'value': 0}, {'index': 9, 'value': 0}],
+        [{'index': 4, 'value': 1}, {'index': 6, 'value': 0}, {'index': 8, 'value': 0}],
+        [{'index': 3, 'value': 1}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}]
+    ]
     
     # Sample and majority works
-    for known in known_sets:
-        plotMajorityWorksVsProbability(prob, s, known)
+    plotMajorityWorksVsProbability(prob, s, knowns8)
 #        result = majorityWorks(11, p, s, knowns)
 #        print(f"With probability {p}, Pr(Maj G = Maj S) = \n{result}\n")
 
@@ -531,4 +560,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
