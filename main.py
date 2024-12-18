@@ -354,7 +354,7 @@ def matchSample(sequences, sample):
     return matchedSeq
 
 
-# Calculate Pr(Majority = Majority in Sample)
+# Calculate Pr(Majority = Majority in Sample | Samples)
 
 def majorityWorks(n, p, s, samples):
     sum = []
@@ -377,9 +377,27 @@ def majorityWorks(n, p, s, samples):
             prMajority = majorityMatch / len(matches)
 
         sum.append(prMajority)
-#        print(f"{majorityMatch} matched sequences")
     return sum
     
+
+# # Calculate Pr(Majority = Majority in Sample | Locations)
+
+def majorityGivenLocation(n, p, s, locations):
+    sequences = createSequences(n, p, s)
+    match = 0
+    
+    for sequence in sequences:
+        majG = majorityValueList(sequence)
+        
+        locationValues = []
+        for l in locations:
+            locationValues.append(sequence[l])
+        majS = majorityValueList(locationValues)
+        if (majG == majS):
+            match+=1
+        
+    return match / s
+
     
 # -----------------------------------------------------------------------------------------------
 
@@ -496,6 +514,9 @@ def main():
     # Nodes
     nodes = range(11,31,1)
     
+    print(majorityGivenLocation(11, .2, s, [3,5,7]))
+    
+    
     # Knowns
     # Not very efficient way of coding this ..
     # Sorted by locations
@@ -551,12 +572,13 @@ def main():
     ]
     
     # Sample and majority works
-    plotMajorityWorksVsProbability(prob, s, knowns8)
-#        result = majorityWorks(11, p, s, knowns)
-#        print(f"With probability {p}, Pr(Maj G = Maj S) = \n{result}\n")
+#    plotMajorityWorksVsProbability(prob, s, knowns8)
+#    result = majorityWorks(11, p, s, knowns)
+#    print(f"With probability {p}, Pr(Maj G = Maj S) = \n{result}\n")
 
 
 # Run main method
 
 if __name__ == "__main__":
     main()
+
