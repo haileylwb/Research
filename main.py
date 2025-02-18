@@ -312,13 +312,12 @@ def majorityValueDictionary(known):
     majorityValue = 0
     knowns = {node['index']: node['value'] for node in known}
     valuesList = list(knowns.values())
-    for i in valuesList:
-        if i == 0:
-            count0 += 1
-        else:
-            count1 += 1
     if count1 > count0:
         majorityValue += 1
+    elif count1 == count0:
+        majorityValue += random.randint(0, 1)
+    else:
+        majorityValue += 0 # haha
     return majorityValue
     
     
@@ -335,6 +334,10 @@ def majorityValueList(known):
             count1 += 1
     if count1 > count0:
         majorityValue += 1
+    elif count1 == count0:
+        majorityValue += random.randint(0, 1)
+    else:
+        majorityValue += 0 # haha
     return majorityValue
     
 
@@ -380,7 +383,7 @@ def majorityWorks(n, p, s, samples):
     return sum
     
 
-# # Calculate Pr(Majority = Majority in Sample | Locations)
+# Calculate Pr(Majority = Majority in Sample | Locations)
 
 def majorityGivenLocation(n, p, s, locations):
     sequences = createSequences(n, p, s)
@@ -491,6 +494,67 @@ def plotMajorityWorksVsProbability(probabilities, s, knowns):
     plt.show()
 
 
+# Graph p vs P(G = S | S locations)
+
+def plotMajorityWorksGivenLocations(n, probabilities, s, location_sets):
+    plt.figure(figsize=(10, 6))
+
+    for locations in location_sets:
+        results = []
+
+        for p in probabilities:
+            result = majorityGivenLocation(n, p, s, locations)
+            results.append(result)
+
+        label = f"Locations: {locations}"
+        plt.plot(probabilities, results, label=label)
+
+    plt.xlabel('Probability (p)')
+    plt.ylabel('Pr(Maj G = Maj S)')
+    plt.title('Probability vs Pr(Maj G = Maj S | S locations)')
+    plt.grid(True)
+    plt.ylim(0, 1)
+    plt.yticks([i * 0.1 for i in range(11)])
+    plt.legend()
+
+    plt.show()
+    
+
+# Graphs p vs P(G = S | S locations), sorted by sample size
+
+def plotAveragedMajorityBySampleSize(n, probabilities, s, location_sets):
+    from collections import defaultdict
+
+    plt.figure(figsize=(10, 6))
+
+    # Group locations by the number of sample points
+    grouped_locations = defaultdict(list)
+    for loc_set in location_sets:
+        grouped_locations[len(loc_set)].append(loc_set)
+
+    # Compute and plot averaged probability for each group
+    for sample_size, locations in grouped_locations.items():
+        averaged_probabilities = []
+
+        for p in probabilities:
+            total_prob = 0
+            for loc in locations:
+                total_prob += majorityGivenLocation(n, p, s, loc)
+            averaged_probabilities.append(total_prob / len(locations))  # Average for group
+
+        plt.plot(probabilities, averaged_probabilities, marker='o', label=f"{sample_size} Sample Points")
+
+    # Plot settings
+    plt.xlabel('Probability (p)')
+    plt.ylabel('Average Pr(Maj G = Maj S)')
+    plt.title('Probability vs Averaged Pr(Maj G = Maj S) by Sample Size')
+    plt.grid(True)
+    plt.ylim(0, 1)
+    plt.yticks([i * 0.1 for i in range(11)])
+    plt.legend(title="Number of Sample Points")
+    plt.show()
+
+
 # Print for testing
 
 def printSequence(sequences):
@@ -514,8 +578,26 @@ def main():
     # Nodes
     nodes = range(11,31,1)
     
-    print(majorityGivenLocation(11, .2, s, [3,5,7]))
+    # Known locations -----------------------------------------------------------------
+        
+    location_sets = [[0, 1, 2], [3, 6, 9], [4, 6, 8], [3, 5, 7], [2, 5, 8]]
+    location_spaced_by_one = [[0, 2, 4, 6, 8, 10], [1, 3, 5, 7, 9]]
+    location_spaced_by_two = [[0, 3, 6, 9], [1, 4, 7, 10]]
+    location_spaced_by_three = [[0, 4, 8], [2, 6, 10]]
+    location_spaced_by_four = [[0, 5, 10]]
+    location_spaced_odd = [[1, 3, 5, 7, 9], [0, 4, 8], [2, 6, 10], [0, 5, 10]]
+    location_all_spacing = [[0, 2, 4, 6, 8, 10], [1, 3, 5, 7, 9], [0, 3, 6, 9], [1, 4, 7, 10], [0, 4, 8], [2, 6, 10], [0, 5, 10]]
     
+    location_spaced_by_sample_size = [[0, 4, 8], [2, 6, 10], [0, 5, 10]]
+    
+#    plotMajorityWorksGivenLocations(11, prob, s, location_all_spacing)
+#    plotMajorityWorksGivenLocations(11, prob, s, location_all_spacing)
+    plotAveragedMajorityBySampleSize(11, prob, s, location_all_spacing)
+
+#    graphThreeSampleLocations(11, prob, s)
+    
+    
+    # Known location and values ------------------------------------------------------
     
     # Knowns
     # Not very efficient way of coding this ..
@@ -538,7 +620,7 @@ def main():
         [{'index': 4, 'value': 0}, {'index': 6, 'value': 1}, {'index': 8, 'value': 0}],
         [{'index': 4, 'value': 1}, {'index': 6, 'value': 0}, {'index': 8, 'value': 0}]
     ]
-    knowns4 = [ # Locations: 3 3 7
+    knowns4 = [ # Locations: 3 5 7
         [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}],
         [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 1}],
         [{'index': 3, 'value': 0}, {'index': 5, 'value': 1}, {'index': 7, 'value': 0}],
@@ -550,31 +632,30 @@ def main():
         [{'index': 0, 'value': 0}, {'index': 1, 'value': 0}, {'index': 2, 'value': 0}],
         [{'index': 3, 'value': 0}, {'index': 6, 'value': 0}, {'index': 9, 'value': 0}],
         [{'index': 4, 'value': 0}, {'index': 6, 'value': 0}, {'index': 8, 'value': 0}],
-        [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}]
+        [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}],
+        [{'index': 2, 'value': 0}, {'index': 5, 'value': 0}, {'index': 8, 'value': 0}]
     ]
     knowns6 = [ # Values: 0 0 1
         [{'index': 0, 'value': 0}, {'index': 1, 'value': 0}, {'index': 2, 'value': 1}],
         [{'index': 3, 'value': 0}, {'index': 6, 'value': 0}, {'index': 9, 'value': 1}],
         [{'index': 4, 'value': 0}, {'index': 6, 'value': 0}, {'index': 8, 'value': 1}],
-        [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 1}]
+        [{'index': 3, 'value': 0}, {'index': 5, 'value': 0}, {'index': 7, 'value': 1}],
+        [{'index': 2, 'value': 0}, {'index': 5, 'value': 0}, {'index': 8, 'value': 1}]
     ]
     knowns7 = [ # Values: 0 1 0
         [{'index': 0, 'value': 0}, {'index': 1, 'value': 1}, {'index': 2, 'value': 0}],
         [{'index': 3, 'value': 0}, {'index': 6, 'value': 1}, {'index': 9, 'value': 0}],
         [{'index': 4, 'value': 0}, {'index': 6, 'value': 1}, {'index': 8, 'value': 0}],
-        [{'index': 3, 'value': 0}, {'index': 5, 'value': 1}, {'index': 7, 'value': 0}]
+        [{'index': 3, 'value': 0}, {'index': 5, 'value': 1}, {'index': 7, 'value': 0}],
+        [{'index': 2, 'value': 0}, {'index': 5, 'value': 1}, {'index': 8, 'value': 0}]
     ]
     knowns8 = [ # Values: 1 0 0
         [{'index': 0, 'value': 1}, {'index': 1, 'value': 0}, {'index': 2, 'value': 0}],
         [{'index': 3, 'value': 1}, {'index': 6, 'value': 0}, {'index': 9, 'value': 0}],
         [{'index': 4, 'value': 1}, {'index': 6, 'value': 0}, {'index': 8, 'value': 0}],
-        [{'index': 3, 'value': 1}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}]
+        [{'index': 3, 'value': 1}, {'index': 5, 'value': 0}, {'index': 7, 'value': 0}],
+        [{'index': 2, 'value': 1}, {'index': 5, 'value': 0}, {'index': 8, 'value': 0}]
     ]
-    
-    # Sample and majority works
-#    plotMajorityWorksVsProbability(prob, s, knowns8)
-#    result = majorityWorks(11, p, s, knowns)
-#    print(f"With probability {p}, Pr(Maj G = Maj S) = \n{result}\n")
 
 
 # Run main method
